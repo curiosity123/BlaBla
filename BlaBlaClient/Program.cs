@@ -9,14 +9,15 @@ namespace BlaBlaClient
     {
         static void Main(string[] args)
         {
+            Console.ReadKey();
             Client client = new Client("127.0.0.1", 8000);
             client.Connect();
-            Thread.Sleep(1000);
+           
             User u = new User() { NickName = "lukasz", Password = "123" };
             client.RegisterNewUser(new User() { NickName = "lukasz", Password = "123" });
-            Thread.Sleep(1000);
+            Console.ReadKey();
             client.Login(u);
-            Thread.Sleep(1000);
+            Console.ReadKey();
             client.Logout(u);
             Console.ReadKey();
         }
