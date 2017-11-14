@@ -14,7 +14,6 @@ class Common { }
 [XmlInclude(typeof(Guid))]
 public class User
 {
-    [XmlIgnore]
     public Guid Id;
     public string NickName;
     public string Password;
@@ -31,15 +30,18 @@ public enum PackageType
 }
 
 [XmlInclude(typeof(Command))]
-[XmlInclude(typeof(object))]
-public class Command
+[XmlInclude(typeof(User))]
+[XmlInclude(typeof(Guid))]
+[XmlInclude(typeof(Message))]
+public class  Command
 {
     public PackageType Type;
-    public User Content;
+    public Object Content;
 }
 
 
-[XmlInclude(typeof(Message))]
+
+
 public class Message
 {
     public string MyMessage;
@@ -54,22 +56,25 @@ public static class NetTools
         NetworkStream stream = Session.GetStream();
         new Thread(() =>
         {
-            StringBuilder sb = new StringBuilder();
+
             List<byte> data = new List<byte>();
             while (stream.CanRead)
             {
-                if (stream.CanRead && stream.DataAvailable)
+                if ( stream.DataAvailable)
                 {
+                    
                     byte[] bytes = new byte[100];
                     int size = stream.Read(bytes, 0, 100);
                     data.AddRange(bytes);
                     data.RemoveAll(x => x == '\0');
+
                 }
                 else
                 {
                     if (data.Count > 0)
                     {
-                        Command package = Tools.DeserializeObject<Command>(data.ToArray());
+                        string s = Encoding.UTF8.GetString(data.ToArray());
+                        Command package = Tools.DeserializeObject(data.ToArray());
                         MessageReceived(Session, package);
                         data.Clear();
                     }
@@ -82,17 +87,19 @@ public static class NetTools
 }
 public static class Tools
 {
-    public static void Send<T>(StreamWriter stream, T item)
+    public static void Send(StreamWriter stream, Command item)
     {
-        XmlSerializer xs = new XmlSerializer(typeof(T));
+        XmlSerializer xs = new XmlSerializer(typeof(Command));
         xs.Serialize(stream, item);
     }
 
 
-    public static T DeserializeObject<T>(byte[] xml)
+    public static Command DeserializeObject(byte[] xml)
     {
+
+        string s =Encoding.UTF8.GetString(xml);
         MemoryStream memoryStream = new MemoryStream(xml);
-        XmlSerializer xs = new XmlSerializer(typeof(T));
-        return (T)xs.Deserialize(memoryStream);
+        XmlSerializer xs = new XmlSerializer(typeof(Command));
+        return (Command)xs.Deserialize(memoryStream);
     }
 }

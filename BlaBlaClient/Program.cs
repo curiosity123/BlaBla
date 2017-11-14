@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
@@ -9,16 +10,22 @@ namespace BlaBlaClient
     {
         static void Main(string[] args)
         {
-            Console.ReadKey();
+            Thread.Sleep(1000);
             Client client = new Client("127.0.0.1", 8000);
             client.Connect();
-           
+        
             User u = new User() { NickName = "lukasz", Password = "123" };
-            client.RegisterNewUser(new User() { NickName = "lukasz", Password = "123" });
+            client.RegisterNewUser(u);
+
             Console.ReadKey();
             client.Login(u);
             Console.ReadKey();
-            client.Logout(u);
+            client.GetUsers();
+                      Console.ReadKey();
+            client.Message(new Message() { MyMessage = "test", UserList = new List<User>() { u } });
+
+            Console.ReadKey();
+            Console.WriteLine("Finish");
             Console.ReadKey();
         }
     }
@@ -83,7 +90,17 @@ namespace BlaBlaClient
             Tools.Send(clientStreamWriter, cmd);
         }
 
+        public void GetUsers()
+        {
+            Command cmd = new Command() { Type = PackageType.Users  };
+            Tools.Send(clientStreamWriter, cmd);
+        }
 
+        public void Message(Message msg)
+        {
+            Command cmd = new Command() { Type = PackageType.Message, Content = msg };
+            Tools.Send(clientStreamWriter, cmd);
+        }
 
         private void EventProcessor(TcpClient client, Command cmd)
         {

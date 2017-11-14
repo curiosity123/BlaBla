@@ -16,7 +16,7 @@ namespace BlaBla
         static Server server;
         static void Main(string[] args)
         {
-
+            Console.WriteLine("server started");
             server = new Server("127.0.0.1", 8000);
             server.Start();
             Console.ReadKey();
@@ -88,9 +88,10 @@ namespace BlaBla
         }
         private void RemovingTerminatedClient()
         {
+            return;
             while (isRunning)
             {
-                var session = from x in Sessions where x.LastActivity.AddSeconds(10) < DateTime.UtcNow select x;
+                var session = from x in Sessions where x.LastActivity.AddSeconds(100) < DateTime.UtcNow select x;
 
                 foreach (Session cs in session)
                     cs.Client.Close();
@@ -120,18 +121,18 @@ namespace BlaBla
 
         private void Message(TcpClient client, Command cmd)
         {
-            //Command messageCmd = new Command() { Type = PackageType.Users, Content = cmd };
-            //foreach (User u in (cmd.Content as Message).UserList)
-            //{
-            //    var cli = (from x in Sessions where u.Id == x.User.Id select x).First();
-            //    Tools.Send<Command>(new StreamWriter(cli.Client.GetStream()), messageCmd);
-            //}
+            Command messageCmd = new Command() { Type = PackageType.Users, Content = cmd };
+            foreach (User u in (cmd.Content as Message).UserList)
+            {
+                var cli = (from x in Sessions where u.Id == x.User.Id select x).First();
+                Tools.Send(new StreamWriter(cli.Client.GetStream()), messageCmd);
+            }
         }
 
         private void SendUsers(TcpClient client, Command cmd)
         {
-            //Command usersCmd = new Command() { Type = PackageType.Users, Content = Users };
-            //Tools.Send<Command>(new StreamWriter(client.GetStream()), usersCmd);
+            Command usersCmd = new Command() { Type = PackageType.Users, Content = Users };
+            Tools.Send(new StreamWriter(client.GetStream()), usersCmd);
         }
 
         private void Logout(TcpClient client, Command cmd)
