@@ -137,34 +137,39 @@ namespace BlaBla
 
         private void Logout(TcpClient client, Command cmd)
         {
-            var session = (from x in Sessions where x.Client == client select x);
-            foreach (Session x in session)
-                x.Client.Close();
+                var session = (from x in Sessions where x.Client == client select x);
+                foreach (Session x in session)
+                    x.Client.Close();
         }
 
-        private void Login(TcpClient client, Command cmd)
-        {
-            if ((from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).Count() > 0)
-            {
-                var usr = (from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).First();
-                (from x in Sessions where x.Client == client select x).First().User = usr;
-            }
-        }
 
-        private void Register(Command cmd)
+    
+
+    private void Login(TcpClient client, Command cmd)
+    {
+        if ((from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).Count() > 0)
         {
-            if ((from x in Users where x.NickName == (cmd.Content as User).NickName select x).Count() == 0)
+            var usr = (from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).First();
+            (from x in Sessions where x.Client == client select x).First().User = usr;
+
+                }
+
+    }
+
+    private void Register(Command cmd)
+    {
+        if ((from x in Users where x.NickName == (cmd.Content as User).NickName select x).Count() == 0)
+        {
+            User usr = new User()
             {
-                User usr = new User()
-                {
-                    NickName = (cmd.Content as User).NickName,
-                    Password = (cmd.Content as User).Password,
-                    Id = Guid.NewGuid()
-                };
-                Users.Add(usr);
-            }
+                NickName = (cmd.Content as User).NickName,
+                Password = (cmd.Content as User).Password,
+                Id = Guid.NewGuid()
+            };
+            Users.Add(usr);
         }
     }
+}
 
 
 

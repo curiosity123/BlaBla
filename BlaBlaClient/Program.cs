@@ -13,19 +13,11 @@ namespace BlaBlaClient
             Thread.Sleep(1000);
             Client client = new Client("127.0.0.1", 8000);
             client.Connect();
-        
-            User u = new User() { NickName = "lukasz", Password = "123" };
-            client.RegisterNewUser(u);
-
-            Console.ReadKey();
-            client.Login(u);
-            Console.ReadKey();
+            client.RegisterNewUser(new User() {  NickName = "lukasz"});
+          Thread.Sleep(1000);
             client.GetUsers();
-                      Console.ReadKey();
-            client.Message(new Message() { MyMessage = "test", UserList = new List<User>() { u } });
-
-            Console.ReadKey();
-            Console.WriteLine("Finish");
+                  Thread.Sleep(5000);
+            client.Login(client.ActiveUsers[0]);
             Console.ReadKey();
         }
     }
@@ -40,6 +32,7 @@ namespace BlaBlaClient
         {
             this.Ip = ip;
             this.Port = port;
+            DataReceived = EventProcessor;
         }
 
         TcpClient tcpClient;
@@ -64,12 +57,15 @@ namespace BlaBlaClient
             networkStream = tcpClient.GetStream();
             clientStreamReader = new StreamReader(networkStream);
             clientStreamWriter = new StreamWriter(networkStream);
-            DataReceived = EventProcessor;
         }
         public void Disconnect()
         {
             tcpClient.Close();
         }
+
+
+        public List<User> ActiveUsers = new List<User>();
+
 
 
         public void RegisterNewUser(User user)
@@ -92,7 +88,7 @@ namespace BlaBlaClient
 
         public void GetUsers()
         {
-            Command cmd = new Command() { Type = PackageType.Users  };
+            Command cmd = new Command() { Type = PackageType.Users, Content = null  };
             Tools.Send(clientStreamWriter, cmd);
         }
 
@@ -104,8 +100,11 @@ namespace BlaBlaClient
 
         private void EventProcessor(TcpClient client, Command cmd)
         {
-            Console.WriteLine(cmd.Type.ToString());
-        }
+
+              if(cmd.Type== PackageType.Users)
+                ActiveUsers = cmd.Content as List<User>;
+
+            }
 
 
 

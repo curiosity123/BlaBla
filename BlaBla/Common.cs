@@ -19,6 +19,11 @@ public class User
     public string Password;
 }
 
+public enum Status
+{
+Ok,
+Error
+}
 
 public enum PackageType
 {
@@ -67,7 +72,7 @@ public static class NetTools
                     int size = stream.Read(bytes, 0, 100);
                     data.AddRange(bytes);
                     data.RemoveAll(x => x == '\0');
-
+                    
                 }
                 else
                 {
