@@ -22,9 +22,10 @@ namespace BlaBlaClient
             while (cmd.KeyChar != 'q')
             {
 
+                Console.Clear();
                 PrintMenu();
                 cmd = Console.ReadKey();
-
+                Console.WriteLine();
 
                 if (cmd.KeyChar == 'r')
                     Register();
@@ -51,7 +52,7 @@ namespace BlaBlaClient
             Console.WriteLine("Enter consmer nick name");
             List<User> usrs = new List<User>();
             usrs.Add(new User() { NickName = Console.ReadLine() });
-            client.Message(message, usrs);
+            client.Message(message, usrs);    
         }
 
         private static void Users()
@@ -97,8 +98,6 @@ namespace BlaBlaClient
             Console.WriteLine("m -send message");
             Console.WriteLine("u -get user list");
             Console.WriteLine("q -exit");
-            Console.WriteLine();
-            Console.WriteLine();
         }
     }
 
