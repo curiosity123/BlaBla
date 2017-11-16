@@ -25,12 +25,13 @@ namespace Common
                         byte[] bytes = new byte[100];
                         int size = stream.Read(bytes, 0, 100);
                         data.AddRange(bytes);
-                        data.RemoveAll(x => x == '\0');
+                        
                     }
                     else
                     {
                         if (data.Count > 0)
                         {
+                            data.RemoveAll(x => x == '\0');
                             string s = Encoding.UTF8.GetString(data.ToArray());
                             Common.Command package = DeserializeObject(data.ToArray());
                             MessageReceived(Session, package);
@@ -38,7 +39,7 @@ namespace Common
                         }
                     }
 
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                 }
             }).Start();
         }
@@ -53,11 +54,18 @@ namespace Common
 
         public static Common.Command DeserializeObject(byte[] xml)
         {
-
-            string s = Encoding.UTF8.GetString(xml);
-            MemoryStream memoryStream = new MemoryStream(xml);
-            XmlSerializer xs = new XmlSerializer(typeof(Command));
-            return (Command)xs.Deserialize(memoryStream);
+            try
+            {
+                string s = Encoding.UTF8.GetString(xml);
+                MemoryStream memoryStream = new MemoryStream(xml);
+                XmlSerializer xs = new XmlSerializer(typeof(Command));
+                return (Command)xs.Deserialize(memoryStream);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Data corrupted!" + ex.ToString());
+                return new Command();
+            }
         }
     }
 }

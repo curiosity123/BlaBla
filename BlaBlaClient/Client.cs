@@ -126,7 +126,6 @@ namespace BlaBlaClient
             if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
             {
                 CurrentUser = cmd.Content as User;
-                IsAlive = true;
                 KeepAlive();
                 Console.WriteLine("You are logged in");
             }

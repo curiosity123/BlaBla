@@ -102,8 +102,9 @@ namespace BlaBlaServer
             Command messageCmd = new Command() { Type = PackageTypeEnum.Message, Content = cmd.Content };
             foreach (User u in (cmd.Content as Message).UserList)
             {
-                var cli = (from x in Sessions where u.NickName == x.User.NickName select x).First();
-                NetworkTools.Send(new StreamWriter(cli.Client.GetStream()), messageCmd);
+                var cli = (from x in Sessions where u.NickName == x.User.NickName select x).FirstOrDefault();
+                if (cli != null)
+                    NetworkTools.Send(new StreamWriter(cli.Client.GetStream()), messageCmd);
             }
         }
 
@@ -134,7 +135,7 @@ namespace BlaBlaServer
 
         private void Register(TcpClient client, Command cmd)
         {
-            if ((from x in Users where x.NickName == (cmd.Content as User).NickName select x).Count() == 0)
+            if (cmd.Content is User && (from x in Users where x.NickName == (cmd.Content as User).NickName select x).Count() == 0)
             {
                 User usr = new User()
                 {
