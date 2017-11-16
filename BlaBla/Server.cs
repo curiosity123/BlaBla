@@ -82,6 +82,8 @@ namespace BlaBlaServer
 
         private void CommandProcessor(TcpClient Client, Command Cmd)
         {
+            if (Cmd.Type == PackageTypeEnum.Alive)
+                Alive(Client, Cmd);
             if (Cmd.Type == PackageTypeEnum.Register)
                 Register(Client, Cmd);
             if (Cmd.Type == PackageTypeEnum.Login)
@@ -97,7 +99,7 @@ namespace BlaBlaServer
 
         private void Message(TcpClient client, Command cmd)
         {
-            Command messageCmd = new Command() { Type = PackageTypeEnum.Users, Content = cmd };
+            Command messageCmd = new Command() { Type = PackageTypeEnum.Message, Content = cmd };
             foreach (User u in (cmd.Content as Message).UserList)
             {
                 var cli = (from x in Sessions where u.Id == x.User.Id select x).First();
@@ -128,7 +130,7 @@ namespace BlaBlaServer
                 if (usr != null)
                 {
                     (from x in Sessions where x.Client == client select x).First().User = usr;
-                    NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = usr });
+                    NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Login, Content = usr });
                 }
             }
         }

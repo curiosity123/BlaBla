@@ -30,7 +30,7 @@ namespace BlaBlaClient
         private User CurrentUser = new User();
 
 
-        bool IsAlive = true;
+        bool IsAlive;
 
         public void Connect()
         {
@@ -60,6 +60,7 @@ namespace BlaBlaClient
             if (IsAlive == false)
                 new Thread(() =>
                 {
+                    IsAlive = true;
                     while (IsAlive)
                     {
                         Alive();
