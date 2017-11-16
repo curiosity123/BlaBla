@@ -99,10 +99,10 @@ namespace BlaBlaServer
 
         private void Message(TcpClient client, Command cmd)
         {
-            Command messageCmd = new Command() { Type = PackageTypeEnum.Message, Content = cmd };
+            Command messageCmd = new Command() { Type = PackageTypeEnum.Message, Content = cmd.Content };
             foreach (User u in (cmd.Content as Message).UserList)
             {
-                var cli = (from x in Sessions where u.Id == x.User.Id select x).First();
+                var cli = (from x in Sessions where u.NickName == x.User.NickName select x).First();
                 NetworkTools.Send(new StreamWriter(cli.Client.GetStream()), messageCmd);
             }
         }
@@ -117,9 +117,6 @@ namespace BlaBlaServer
         {
             var session = (from x in Sessions where x.User.Id == (cmd.Content as User).Id select x);
             NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Logout, Content = null });
-            foreach (Session x in session)
-                x.Client.Close();
-
         }
 
         private void Login(TcpClient client, Command cmd)

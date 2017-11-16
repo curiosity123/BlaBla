@@ -27,7 +27,7 @@ namespace BlaBlaClient
         StreamWriter clientStreamWriter;
         private event Action<TcpClient, Command> DataReceived;
         public List<User> ActiveUsers = new List<User>();
-        private User CurrentUser = new User();
+        public User CurrentUser = new User();
 
 
         bool IsAlive;
@@ -87,9 +87,9 @@ namespace BlaBlaClient
             NetworkTools.Send(clientStreamWriter, cmd);
         }
 
-        public void Logout(User user)
+        public void Logout()
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = user };
+            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = CurrentUser };
             NetworkTools.Send(clientStreamWriter, cmd);
         }
 
@@ -107,22 +107,35 @@ namespace BlaBlaClient
         }
 
 
+
+
+        private void PrintUsers()
+        {
+            foreach (User u in ActiveUsers)
+                Console.WriteLine(u.NickName);
+        }
+
         private void EventProcessor(TcpClient client, Command cmd)
         {
             if (cmd.Type == PackageTypeEnum.Users)
+            {
                 ActiveUsers = cmd.Content as List<User>;
+                PrintUsers();
+            }
 
             if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
             {
                 CurrentUser = cmd.Content as User;
                 IsAlive = true;
                 KeepAlive();
+                Console.WriteLine("You are logged in");
             }
 
             if (cmd.Type == PackageTypeEnum.Logout)
             {
                 IsAlive = false;
                 CurrentUser = new User();
+                Console.WriteLine("You are logout");
             }
 
             if (cmd.Type == PackageTypeEnum.Message)
