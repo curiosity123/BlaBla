@@ -26,7 +26,7 @@ namespace BlaBlaClient
                 cmd = Console.ReadKey();
 
 
-                if (cmd.KeyChar == 'n')
+                if (cmd.KeyChar == 'r')
                     Register();
 
                 if (cmd.KeyChar == 'l')
