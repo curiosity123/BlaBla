@@ -14,6 +14,9 @@ namespace BlaBlaClient
             Thread.Sleep(1000);
             Client client = new Client("127.0.0.1", 8000);
             client.Connect();
+
+
+
             client.RegisterNewUser(new User() {  NickName = "lukasz"});
           Thread.Sleep(1000);
             client.GetUsers();

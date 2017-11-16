@@ -10,6 +10,7 @@ namespace Common
         Login,
         Logout,
         Users,
-        Message
+        Message,
+        Alive
     }
 }

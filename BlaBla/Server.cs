@@ -21,6 +21,7 @@ namespace BlaBlaServer
         private TcpListener Listener;
         private bool isRunning;
 
+
         public Server(string ip, int port)
         {
             this.Ip = ip;
@@ -112,9 +113,11 @@ namespace BlaBlaServer
 
         private void Logout(TcpClient client, Command cmd)
         {
-            var session = (from x in Sessions where x.Client == client select x);
+            var session = (from x in Sessions where x.User.Id == (cmd.Content as User).Id select x);
+            NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Logout, Content = null });
             foreach (Session x in session)
                 x.Client.Close();
+
         }
 
         private void Login(TcpClient client, Command cmd)
@@ -122,8 +125,11 @@ namespace BlaBlaServer
             if ((from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).Count() > 0)
             {
                 var usr = (from x in Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).First();
-                (from x in Sessions where x.Client == client select x).First().User = usr;
-
+                if (usr != null)
+                {
+                    (from x in Sessions where x.Client == client select x).First().User = usr;
+                    NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = usr });
+                }
             }
         }
 
@@ -138,7 +144,20 @@ namespace BlaBlaServer
                     Id = Guid.NewGuid()
                 };
                 Users.Add(usr);
+                NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = usr });
             }
+            else
+                NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = null });
+        }
+
+        private void Alive(TcpClient client, Command cmd)
+        {
+            var session = (from x in Sessions
+                           where x.User.Id == (cmd.Content as User).Id
+                           select x).FirstOrDefault();
+
+            if (session != null)
+                session.LastActivity = DateTime.UtcNow;
         }
     }
-    }
+}

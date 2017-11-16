@@ -6,8 +6,9 @@ namespace Common
 {
     public class Message
     {
-        public string MyMessage;
+        public string Text;
         public List<User> UserList;
+        public User Sender;
     }
 
 }
