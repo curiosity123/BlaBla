@@ -15,7 +15,6 @@ namespace BlaBlaServer
     public class Server
     {
         Action<TcpClient, Command> PackageReceived;
-        List<Command> CommandBus = new List<Command>();
         List<Session> Sessions = new List<Session>();
         List<User> Users = new List<User>();
         private string Ip;
