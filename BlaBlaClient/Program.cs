@@ -15,7 +15,7 @@ namespace BlaBlaClient
         static void Main(string[] args)
         {
             Thread.Sleep(1000);
-            client = new Client(new XmlSerialization(), "127.0.0.1", 8000);
+            client = Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
             client.Run();
 
             ConsoleKeyInfo cmd;

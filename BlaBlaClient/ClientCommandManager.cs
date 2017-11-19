@@ -52,18 +52,11 @@ namespace BlaBlaClient
         }
 
 
-        private void PrintUsers()
-        {
-            foreach (User u in data.ActiveUsers)
-                Console.WriteLine(u.NickName);
-        }
-
         public void EventProcessor(TcpClient client, Command cmd)
         {
             if (cmd.Type == PackageTypeEnum.Users)
             {
                 data.ActiveUsers = cmd.Content as List<User>;
-                PrintUsers();
             }
 
             if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)

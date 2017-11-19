@@ -17,14 +17,20 @@ namespace BlaBlaClient
         public ClientCommandManager CommandManager;
         public ClientData Data = new ClientData();
 
-
-        public Client(ISerialization serialization, string ip, int port)
+        private Client(ISerialization serialization, string ip, int port)
         {
             Communication = new TcpClientCommunication(serialization, ip, port);
             CommandManager = new ClientCommandManager(Data, Communication);
             Communication.PackageReceived += CommandManager.EventProcessor;
         }
         private Client() { }
+
+        public static Client Create(ISerialization serialization, string ip, int port)
+        {
+            Client client = new Client(serialization, ip, port);
+            return client;
+        }
+
 
         public void Run()
         {
