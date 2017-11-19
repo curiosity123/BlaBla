@@ -1,4 +1,6 @@
 ﻿using Common;
+using Common.Communication;
+using Common.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,147 +13,29 @@ namespace BlaBlaClient
 
     class Client
     {
-        private string Ip;
-        private int Port;
+        ICommunication<Command> Communication;
+        public ClientCommandManager CommandManager;
+        public ClientData Data = new ClientData();
 
-        public Client(string ip, int port)
+
+        public Client(ISerialization serialization, string ip, int port)
         {
-            this.Ip = ip;
-            this.Port = port;
-            DataReceived = EventProcessor;
+            Communication = new TcpClientCommunication(serialization, ip, port);
+            CommandManager = new ClientCommandManager(Data, Communication);
+            Communication.PackageReceived += CommandManager.EventProcessor;
         }
+        private Client() { }
 
-        TcpClient tcpClient;
-        NetworkStream networkStream;
-        StreamReader clientStreamReader;
-        StreamWriter clientStreamWriter;
-        private event Action<TcpClient, Command> DataReceived;
-        public List<User> ActiveUsers = new List<User>();
-        public User CurrentUser = new User();
-
-
-        bool IsAlive;
-
-        public void Connect()
+        public void Run()
         {
-            tcpClient = new TcpClient();
-            try
-            {
-                tcpClient.Connect(Ip, Port);
-                NetworkTools.Receiver(tcpClient, DataReceived);
-            }
-            catch
-            {
-                Console.WriteLine("Cant connect");
-            }
-            networkStream = tcpClient.GetStream();
-            clientStreamReader = new StreamReader(networkStream);
-            clientStreamWriter = new StreamWriter(networkStream);
+            Communication.Connect();
         }
-        public void Disconnect()
+        public void Stop()
         {
-            IsAlive = false;
-            Thread.Sleep(2000);
-            tcpClient.Close();
-        }
-
-        private void KeepAlive()
-        {
-            if (IsAlive == false)
-                new Thread(() =>
-                {
-                    IsAlive = true;
-                    while (IsAlive)
-                    {
-                        Alive();
-                        Thread.Sleep(1000);
-                    }
-                }).Start();
-        }
-
-        private void Alive()
-        {
-            Command cmd = new Command() { Type = PackageTypeEnum.Alive, Content = CurrentUser };
-            NetworkTools.Send(clientStreamWriter, cmd);
-        }
-
-        public void RegisterNewUser(User user)
-        {
-            Command cmd = new Command() { Type = PackageTypeEnum.Register, Content = user };
-            NetworkTools.Send(clientStreamWriter, cmd);
-        }
-
-        public void Login(User user)
-        {
-            Command cmd = new Command() { Type = PackageTypeEnum.Login, Content = user };
-            NetworkTools.Send(clientStreamWriter, cmd);
-        }
-
-        public void Logout()
-        {
-            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = CurrentUser };
-            NetworkTools.Send(clientStreamWriter, cmd);
-        }
-
-        public void GetUsers()
-        {
-            Command cmd = new Command() { Type = PackageTypeEnum.Users, Content = CurrentUser };
-            NetworkTools.Send(clientStreamWriter, cmd);
-        }
-
-        public void Message(string text, List<User> users)
-        {
-            Message msg = new Common.Message() { Sender = CurrentUser, UserList = users, Text = text };
-            Command cmd = new Command() { Type = PackageTypeEnum.Message, Content = msg };
-            NetworkTools.Send(clientStreamWriter, cmd);
+            Communication.Disconnect();
         }
 
 
-
-
-        private void PrintUsers()
-        {
-            foreach (User u in ActiveUsers)
-                Console.WriteLine(u.NickName);
-        }
-
-        private void EventProcessor(TcpClient client, Command cmd)
-        {
-            if (cmd.Type == PackageTypeEnum.Users)
-            {
-                ActiveUsers = cmd.Content as List<User>;
-                PrintUsers();
-            }
-
-            if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
-            {
-                CurrentUser = cmd.Content as User;
-                KeepAlive();
-                Console.WriteLine("You are logged in");
-            }
-
-            if (cmd.Type == PackageTypeEnum.Logout)
-            {
-                IsAlive = false;
-                CurrentUser = new User();
-                Console.WriteLine("You are logout");
-            }
-
-            if (cmd.Type == PackageTypeEnum.Message)
-            {
-                Message msg = cmd.Content as Message;
-                Console.WriteLine(msg.Sender.NickName + "# Wrote: " + msg.Text);
-            }
-
-            if (cmd.Type == PackageTypeEnum.Register)
-            {
-                User u = cmd.Content as User;
-                if (u != null)
-                    Console.WriteLine("User " + u.NickName + " was registered succesfully! :)");
-                else
-                    Console.WriteLine("User " + u.NickName + " was not registered, Try different nickname... :(");
-            }
-        }
 
     }
 }

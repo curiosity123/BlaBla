@@ -1,4 +1,6 @@
 ﻿using Common;
+using Common.Communication;
+using Common.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,12 +22,13 @@ namespace BlaBlaServer
         private int Port;
         private TcpListener Listener;
         private bool isRunning;
-
+        ISerialization serialization = new XmlSerialization();
 
         public Server(string ip, int port)
         {
             this.Ip = ip;
             this.Port = port;
+            //new TcpClientCommunication(new XmlSerialization(),);
             PackageReceived = CommandProcessor;
             isRunning = true;
         }
@@ -54,7 +57,7 @@ namespace BlaBlaServer
                     TcpClient client = Listener.AcceptTcpClient();
                     Sessions.Add(new Session() { Client = client, LastActivity = DateTime.UtcNow });
                     Console.WriteLine("Connected with new client " + client.Client.RemoteEndPoint.ToString());
-                    NetworkTools.Receiver(client, PackageReceived);
+                    CommunicationTools.Receive(serialization, client, PackageReceived);
                 }
                 catch
                 {
@@ -104,20 +107,20 @@ namespace BlaBlaServer
             {
                 var cli = (from x in Sessions where u.NickName == x.User.NickName select x).FirstOrDefault();
                 if (cli != null)
-                    NetworkTools.Send(new StreamWriter(cli.Client.GetStream()), messageCmd);
+                    CommunicationTools.Send(serialization,new StreamWriter(cli.Client.GetStream()), messageCmd);
             }
         }
 
         private void SendUsers(TcpClient client, Command cmd)
         {
             Command usersCmd = new Command() { Type = PackageTypeEnum.Users, Content = Users };
-            NetworkTools.Send(new StreamWriter(client.GetStream()), usersCmd);
+            CommunicationTools.Send(serialization, new StreamWriter(client.GetStream()), usersCmd);
         }
 
         private void Logout(TcpClient client, Command cmd)
         {
             var session = (from x in Sessions where x.User.Id == (cmd.Content as User).Id select x);
-            NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Logout, Content = null });
+            CommunicationTools.Send(serialization, new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Logout, Content = null });
         }
 
         private void Login(TcpClient client, Command cmd)
@@ -128,7 +131,7 @@ namespace BlaBlaServer
                 if (usr != null)
                 {
                     (from x in Sessions where x.Client == client select x).First().User = usr;
-                    NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Login, Content = usr });
+                    CommunicationTools.Send(serialization, new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Login, Content = usr });
                 }
             }
         }
@@ -144,10 +147,10 @@ namespace BlaBlaServer
                     Id = Guid.NewGuid()
                 };
                 Users.Add(usr);
-                NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = usr });
+                CommunicationTools.Send(serialization, new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = usr });
             }
             else
-                NetworkTools.Send(new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = null });
+                CommunicationTools.Send(serialization, new StreamWriter(client.GetStream()), new Command() { Type = PackageTypeEnum.Register, Content = null });
         }
 
         private void Alive(TcpClient client, Command cmd)

@@ -4,13 +4,12 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
 
-namespace Common
+namespace Common.Communication
 {
-    public static class NetworkTools
+    public static class CommunicationTools
     {
-        public static void Receiver(TcpClient Session, Action<TcpClient, Common.Command> MessageReceived)
+        public static void Receive(ISerialization serializer, TcpClient Session, Action<TcpClient, Common.Command> MessageReceived)
         {
             NetworkStream stream = Session.GetStream();
             new Thread(() =>
@@ -25,7 +24,7 @@ namespace Common
                         byte[] bytes = new byte[100];
                         int size = stream.Read(bytes, 0, 100);
                         data.AddRange(bytes);
-                        
+
                     }
                     else
                     {
@@ -33,7 +32,7 @@ namespace Common
                         {
                             data.RemoveAll(x => x == '\0');
                             string s = Encoding.UTF8.GetString(data.ToArray());
-                            Common.Command package = DeserializeObject(data.ToArray());
+                            Common.Command package = serializer.Deserialize<Command>(data.ToArray());
                             MessageReceived(Session, package);
                             data.Clear();
                         }
@@ -44,28 +43,11 @@ namespace Common
             }).Start();
         }
 
-
-        public static void Send(StreamWriter stream, Command item)
+        public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Command));
-            xs.Serialize(stream, item);
-        }
-
-
-        public static Common.Command DeserializeObject(byte[] xml)
-        {
-            try
-            {
-                string s = Encoding.UTF8.GetString(xml);
-                MemoryStream memoryStream = new MemoryStream(xml);
-                XmlSerializer xs = new XmlSerializer(typeof(Command));
-                return (Command)xs.Deserialize(memoryStream);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Data corrupted!" + ex.ToString());
-                return new Command();
-            }
+            byte[] data = serializer.Serialize<T>(item);
+            stream.Write(Encoding.UTF8.GetString(data).ToCharArray());
+            stream.Flush();
         }
     }
 }

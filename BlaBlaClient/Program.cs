@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,8 +15,8 @@ namespace BlaBlaClient
         static void Main(string[] args)
         {
             Thread.Sleep(1000);
-            client = new Client("127.0.0.1", 8000);
-            client.Connect();
+            client = new Client(new XmlSerialization(), "127.0.0.1", 8000);
+            client.Run();
 
             ConsoleKeyInfo cmd;
           
@@ -52,17 +53,17 @@ namespace BlaBlaClient
             Console.WriteLine("Enter consmer nick name");
             List<User> usrs = new List<User>();
             usrs.Add(new User() { NickName = Console.ReadLine() });
-            client.Message(message, usrs);    
+            client.CommandManager.Message(message, usrs);    
         }
 
         private static void Users()
         {
-            client.GetUsers();
+            client.CommandManager.GetUsers();
         }
 
         private static void Logout()
         {
-            client.Logout();
+            client.CommandManager.Logout();
         }
 
         private static void Login()
@@ -72,7 +73,7 @@ namespace BlaBlaClient
             usr.NickName = Console.ReadLine();
             Console.WriteLine("Enter password");
             usr.Password = Console.ReadLine();
-            client.Login(usr);
+            client.CommandManager.Login(usr);
         }
 
         private static void Register()
@@ -82,7 +83,7 @@ namespace BlaBlaClient
             usr.NickName = Console.ReadLine();
             Console.WriteLine("Enter password");
             usr.Password = Console.ReadLine();
-            client.RegisterNewUser(usr);
+            client.CommandManager.RegisterNewUser(usr);
         }
 
 
