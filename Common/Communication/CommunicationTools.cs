@@ -43,6 +43,8 @@ namespace Common.Communication
             }).Start();
         }
 
+
+
         public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
         {
             byte[] data = serializer.Serialize<T>(item);

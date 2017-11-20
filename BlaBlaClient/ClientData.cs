@@ -9,5 +9,5 @@ namespace BlaBlaClient
     {
         public List<User> ActiveUsers = new List<User>();
         public User CurrentUser = new User();
-   }
+    }
 }

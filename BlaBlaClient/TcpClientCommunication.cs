@@ -18,7 +18,7 @@ namespace Common
         private int Port;
         TcpClient tcpClient;
         StreamWriter clientStreamWriter;
-        public event Action<TcpClient, Command> PackageReceived;
+        public event Action<TcpClient,Command> PackageReceived;
 
         ISerialization serializer;
 

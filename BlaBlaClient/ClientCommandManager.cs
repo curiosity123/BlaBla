@@ -18,7 +18,7 @@ namespace BlaBlaClient
             this.data = data;
         }
 
-        public void EventProcessor(TcpClient client, Command cmd)
+        internal void EventProcessor(TcpClient client, Command cmd)
         {
             if (cmd.Type == PackageTypeEnum.Users)
             {
