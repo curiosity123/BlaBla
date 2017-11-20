@@ -47,7 +47,7 @@ namespace Common
             clientStreamWriter = new StreamWriter(tcpClient.GetStream());
         }
 
-        public bool IsAlive = false;
+        private bool IsAlive = false;
         public void Disconnect()
         {
             IsAlive = false;
@@ -55,7 +55,7 @@ namespace Common
             tcpClient.Close();
         }
 
-        public void Receive(Action<TcpClient, Common.Command> MessageReceived)
+        private void Receive(Action<TcpClient, Common.Command> MessageReceived)
         {
             CommunicationTools.Receive(serializer, tcpClient, MessageReceived);
         }

@@ -17,7 +17,7 @@ namespace Common.Communication
         private int Port;
         private TcpListener Listener;
         private bool isRunning;
-        ISerialization serialization = new XmlSerialization();
+        private ISerialization serialization = new XmlSerialization();
         private ServerSettings Settings;
         public event Action<TcpClient, Command> PackageReceived;
 
