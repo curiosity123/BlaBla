@@ -12,7 +12,7 @@ namespace Common
 {
 
 
-    public class TcpClientCommunication : ICommunication<Command>
+    public class TcpClientCommunication
     {
         private string Ip;
         private int Port;

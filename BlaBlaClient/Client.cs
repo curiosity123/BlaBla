@@ -13,14 +13,14 @@ namespace BlaBlaClient
 
     class Client
     {
-        ICommunication<Command> Communication;
+        TcpClientCommunication Communication;
         public ClientCommandManager CommandManager;
-        public ClientData Data = new ClientData();
+        public ClientSettings Settings = new ClientSettings();
 
         private Client(ISerialization serialization, string ip, int port)
         {
             Communication = new TcpClientCommunication(serialization, ip, port);
-            CommandManager = new ClientCommandManager(Data, Communication);
+            CommandManager = new ClientCommandManager(Settings, Communication);
             Communication.PackageReceived += CommandManager.EventProcessor;
         }
         private Client() { }
@@ -40,8 +40,5 @@ namespace BlaBlaClient
         {
             Communication.Disconnect();
         }
-
-
-
     }
 }

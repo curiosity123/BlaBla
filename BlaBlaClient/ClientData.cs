@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BlaBlaClient
 {
-    public class ClientData
+    public class ClientSettings
     {
         public List<User> ActiveUsers = new List<User>();
         public User CurrentUser = new User();

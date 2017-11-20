@@ -1,5 +1,6 @@
 ﻿using BlaBlaServer;
 using Common;
+using Common.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace BlaBla
         static void Main(string[] args)
         {
             Console.WriteLine("server started");
-            server = new Server("127.0.0.1", 8000);
+            server = Server.Create(new XmlSerialization(), "127.0.0.1", 8000);
             server.Start();
             Console.ReadKey();
         }
