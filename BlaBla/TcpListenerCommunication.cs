@@ -88,7 +88,8 @@ namespace Common.Communication
 
         public void Send<T>(TcpClient Client, T item)
         {
-            CommunicationTools.Send(serialization, new StreamWriter(Client.GetStream()), item);
+            if(CommunicationTools.IsConnected(Client))
+                CommunicationTools.Send(serialization, new StreamWriter(Client.GetStream()), item);
         }
 
 

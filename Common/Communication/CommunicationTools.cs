@@ -15,7 +15,7 @@ namespace Common.Communication
             NetworkStream stream = Session.GetStream();
             new Thread(() =>
             {
-             
+
                 StringBuilder data = new StringBuilder();
                 while (stream.CanRead)
                 {
@@ -40,21 +40,21 @@ namespace Common.Communication
                             }
                             data.Clear();
                         }
-                    
+
 
 
                     }
-                
 
-                Thread.Sleep(1);
-            }
+
+                    Thread.Sleep(1);
+                }
             }).Start();
-    }
+        }
 
 
 
-    public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
-    {
+        public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
+        {
             try
             {
                 byte[] data = serializer.Serialize<T>(item);
@@ -62,7 +62,26 @@ namespace Common.Communication
                 stream.Write('\0');
                 stream.Flush();
             }
-            catch { throw; };
+            catch {  };
+        }
+
+
+        public static bool IsConnected(TcpClient Client)
+        {
+            try
+            {
+                if (Client.Client.Poll(0, SelectMode.SelectRead))
+                {
+                    byte[] buff = new byte[1];
+                    if (Client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                        return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
-}
 }

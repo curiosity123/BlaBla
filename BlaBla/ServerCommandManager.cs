@@ -72,7 +72,7 @@ namespace BlaBlaServer
         {
             if ((from x in Settings.Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).Count() > 0)
             {
-                var usr = (from x in Settings.Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).First();
+                var usr = (from x in Settings.Users where x.NickName == (cmd.Content as User).NickName && x.Password == (cmd.Content as User).Password select x).FirstOrDefault();
                 if (usr != null)
                 {
                     (from x in Settings.Sessions where x.Client == client select x).First().User = usr;
