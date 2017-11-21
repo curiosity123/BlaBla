@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 namespace Common
 {
     [XmlInclude(typeof(User))]
-    [XmlInclude(typeof(Guid))]
     public class User
     {
         public Guid Id;

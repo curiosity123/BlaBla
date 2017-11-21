@@ -25,7 +25,7 @@ namespace BlaBlaServer
             Settings = new ServerSettings();
             Communication = new TcpListenerCommunication(serialization, Settings, ip, port);
             CommandManager = new ServerCommandManager(Settings, Communication);
-            Communication.PackageReceived+=CommandManager.CommandProcessor;
+
         }
 
         private Server() { }

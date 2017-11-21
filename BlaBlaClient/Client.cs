@@ -21,7 +21,6 @@ namespace BlaBlaClient
         {
             Communication = new TcpClientCommunication(serialization, ip, port);
             CommandManager = new ClientCommandManager(Settings, Communication);
-            Communication.PackageReceived += CommandManager.EventProcessor;
         }
         private Client() { }
 

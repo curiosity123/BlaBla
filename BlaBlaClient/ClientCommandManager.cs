@@ -9,33 +9,34 @@ namespace BlaBlaClient
 {
     public class ClientCommandManager
     {
-        ClientSettings data;
+        ClientSettings Settings;
         TcpClientCommunication communication;
    
         public ClientCommandManager(ClientSettings data, TcpClientCommunication communication)
         {
             this.communication = communication;
-            this.data = data;
+            this.communication.PackageReceived += CommandProcessor;
+            this.Settings = data;
         }
 
-        internal void EventProcessor(TcpClient client, Command cmd)
+        internal void CommandProcessor(TcpClient client, Command cmd)
         {
             if (cmd.Type == PackageTypeEnum.Users)
             {
-                data.ActiveUsers = cmd.Content as List<User>;
+                Settings.ActiveUsers = cmd.Content as List<User>;
             }
 
             if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
             {
-                data.CurrentUser = cmd.Content as User;
-                communication.StartSendingAlivePackage(data.CurrentUser);
+                Settings.CurrentUser = cmd.Content as User;
+                communication.StartSendingAlivePackage(Settings.CurrentUser);
                 Console.WriteLine("You are logged in");
             }
 
             if (cmd.Type == PackageTypeEnum.Logout)
             {
                 communication.StopSendingAlivePackage();
-                data.CurrentUser = new User();
+                Settings.CurrentUser = new User();
                 Console.WriteLine("You are logout");
             }
 
@@ -70,19 +71,19 @@ namespace BlaBlaClient
 
         public void Logout()
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = data.CurrentUser };
+            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
             communication.Send(cmd);
         }
 
         public void GetUsers()
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Users, Content = data.CurrentUser };
+            Command cmd = new Command() { Type = PackageTypeEnum.Users, Content = Settings.CurrentUser };
             communication.Send(cmd);
         }
 
         public void Message(string text, List<User> users)
         {
-            Message msg = new Common.Message() { Sender = data.CurrentUser, UserList = users, Text = text };
+            Message msg = new Common.Message() { Sender = Settings.CurrentUser, UserList = users, Text = text };
             Command cmd = new Command() { Type = PackageTypeEnum.Message, Content = msg };
             communication.Send(cmd);
         }

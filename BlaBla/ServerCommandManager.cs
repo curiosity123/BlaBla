@@ -18,6 +18,7 @@ namespace BlaBlaServer
         {
             Settings = settings;
             Communication = communication;
+            Communication.PackageReceived += CommandProcessor;
         }
 
         private ServerCommandManager() { }
