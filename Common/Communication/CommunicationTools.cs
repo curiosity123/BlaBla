@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -14,8 +15,8 @@ namespace Common.Communication
             NetworkStream stream = Session.GetStream();
             new Thread(() =>
             {
-
-                List<byte> data = new List<byte>();
+             
+                StringBuilder data = new StringBuilder();
                 while (stream.CanRead)
                 {
                     if (stream.DataAvailable)
@@ -23,33 +24,41 @@ namespace Common.Communication
 
                         byte[] bytes = new byte[100];
                         int size = stream.Read(bytes, 0, 100);
-                        data.AddRange(bytes);
-
+                        data.Append(Encoding.UTF8.GetString(bytes));
                     }
                     else
                     {
-                        if (data.Count > 0)
+
+                        if (data.Length > 0)
                         {
-                            data.RemoveAll(x => x == '\0');
-                            string s = Encoding.UTF8.GetString(data.ToArray());
-                            Common.Command package = serializer.Deserialize<Command>(data.ToArray());
-                            MessageReceived(Session, package);
+                            string[] packs = data.ToString().Split('\0');
+                            packs = packs.Where(w => w != "").ToArray();
+                            foreach (string s in packs)
+                            {
+                                Common.Command package = serializer.Deserialize<Command>(Encoding.ASCII.GetBytes(s));
+                                MessageReceived(Session, package);
+                            }
                             data.Clear();
                         }
+                    
+
+
                     }
+                
 
-                    Thread.Sleep(1);
-                }
+                Thread.Sleep(1);
+            }
             }).Start();
-        }
-
-
-
-        public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
-        {
-            byte[] data = serializer.Serialize<T>(item);
-            stream.Write(Encoding.UTF8.GetString(data).ToCharArray());
-            stream.Flush();
-        }
     }
+
+
+
+    public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
+    {
+        byte[] data = serializer.Serialize<T>(item);
+        stream.Write(Encoding.UTF8.GetString(data).ToCharArray());
+        stream.Write('\0');
+        stream.Flush();
+    }
+}
 }
