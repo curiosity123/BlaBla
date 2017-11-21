@@ -72,10 +72,13 @@ namespace Common.Communication
         {
             while (isRunning)
             {
-                var session = from x in Settings.Sessions where x.LastActivity.AddSeconds(300) < DateTime.UtcNow select x;
+                var session = from x in Settings.Sessions where x.LastActivity.AddSeconds(10) < DateTime.UtcNow select x;
 
                 foreach (Session cs in session)
+                {
+                    Console.WriteLine("Connection terminated... " + cs.Client.Client.RemoteEndPoint.ToString());
                     cs.Client.Close();
+                }
 
                 Settings.Sessions.RemoveAll(x => x.Client.Connected == false);
 

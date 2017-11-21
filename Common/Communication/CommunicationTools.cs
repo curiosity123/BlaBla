@@ -55,10 +55,14 @@ namespace Common.Communication
 
     public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
     {
-        byte[] data = serializer.Serialize<T>(item);
-        stream.Write(Encoding.UTF8.GetString(data).ToCharArray());
-        stream.Write('\0');
-        stream.Flush();
+            try
+            {
+                byte[] data = serializer.Serialize<T>(item);
+                stream.Write(Encoding.UTF8.GetString(data).ToCharArray());
+                stream.Write('\0');
+                stream.Flush();
+            }
+            catch { throw; };
     }
 }
 }

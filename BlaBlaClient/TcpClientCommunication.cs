@@ -62,7 +62,27 @@ namespace Common
 
         public void Send<T>(T item)
         {
-            CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
+            if (IsConnected())
+                CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
+            else
+            {
+                Connect();
+                CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
+            }
+        }
+
+        private bool IsConnected()
+        {
+            if (tcpClient.Client.Poll(0, SelectMode.SelectRead))
+            {
+                byte[] buff = new byte[1];
+                if (tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
+                {
+                    // Client disconnected
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void Alive(User CurrentUser)
