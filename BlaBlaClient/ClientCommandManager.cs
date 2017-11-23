@@ -7,19 +7,22 @@ using System.Net.Sockets;
 
 namespace BlaBlaClient
 {
-    public class ClientCommandManager
+
+
+
+    public class ClientCommandManager:IClientCommandManager
     {
         ClientSettings Settings;
-        TcpClientCommunication communication;
+        IClientCommunication communication;
    
-        public ClientCommandManager(ClientSettings data, TcpClientCommunication communication)
+        public ClientCommandManager(ClientSettings data, IClientCommunication communication)
         {
             this.communication = communication;
             this.communication.PackageReceived += CommandProcessor;
             this.Settings = data;
         }
 
-        internal void CommandProcessor(TcpClient client, Command cmd)
+        public void CommandProcessor(TcpClient client, Command cmd)
         {
             if (cmd.Type == PackageTypeEnum.Users)
             {

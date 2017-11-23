@@ -13,13 +13,13 @@ namespace BlaBlaClient
 
     class Client
     {
-        TcpClientCommunication Communication;
-        public ClientCommandManager CommandManager;
+        IClientCommunication Communication;
+        public IClientCommandManager CommandManager;
         public ClientSettings Settings = new ClientSettings();
 
         private Client(ISerialization serialization, string ip, int port)
         {
-            Communication = new TcpClientCommunication(serialization, ip, port);
+            Communication = new ClientCommunication(serialization, ip, port);
             CommandManager = new ClientCommandManager(Settings, Communication);
         }
         private Client() { }

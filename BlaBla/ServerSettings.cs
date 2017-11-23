@@ -5,9 +5,10 @@ using System.Text;
 
 namespace BlaBlaServer
 {
-    public class ServerSettings
+    public class ServerSettings 
     {
         public List<Session> Sessions = new List<Session>();
         public List<User> Users = new List<User>();
     }
+
 }

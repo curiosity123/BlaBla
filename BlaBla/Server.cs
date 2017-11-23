@@ -17,13 +17,13 @@ namespace BlaBlaServer
         ISerialization serialization;
         ServerCommandManager CommandManager;
         ServerSettings Settings;
-        TcpListenerCommunication Communication;
+        IServerCommunication Communication;
 
 
         private Server(ISerialization serialization, string ip, int port)
         {
             Settings = new ServerSettings();
-            Communication = new TcpListenerCommunication(serialization, Settings, ip, port);
+            Communication = new ServerCommunication(serialization, Settings, ip, port);
             CommandManager = new ServerCommandManager(Settings, Communication);
 
         }

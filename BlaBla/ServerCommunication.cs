@@ -11,7 +11,7 @@ using System.IO;
 
 namespace Common.Communication
 {
-    public class TcpListenerCommunication
+    public class ServerCommunication: IServerCommunication
     {
         private string Ip;
         private int Port;
@@ -19,18 +19,19 @@ namespace Common.Communication
         private bool isRunning;
         private ISerialization serialization = new XmlSerialization();
         private ServerSettings Settings;
+
         public event Action<TcpClient, Command> PackageReceived;
 
 
 
-        public TcpListenerCommunication(ISerialization serialization, ServerSettings settings, string ip, int port)
+        public ServerCommunication(ISerialization serialization, ServerSettings settings, string ip, int port)
         {
             this.serialization = serialization;
             this.Settings = settings;
             Ip = ip;
             Port = port;
         }
-        private TcpListenerCommunication(){ }
+        private ServerCommunication(){ }
 
 
         public void Connect()
@@ -91,7 +92,6 @@ namespace Common.Communication
             if(CommunicationTools.IsConnected(Client))
                 CommunicationTools.Send(serialization, new StreamWriter(Client.GetStream()), item);
         }
-
-
     }
+
 }

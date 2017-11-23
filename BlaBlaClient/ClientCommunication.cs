@@ -1,4 +1,5 @@
-﻿using Common.Communication;
+﻿using BlaBlaClient;
+using Common.Communication;
 using Common.Serialization;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Common
 {
 
 
-    public class TcpClientCommunication
+
+    public class ClientCommunication:IClientCommunication
     {
         private string Ip;
         private int Port;
@@ -22,13 +24,13 @@ namespace Common
 
         ISerialization serializer;
 
-        public TcpClientCommunication(ISerialization serializer, string ip, int port)
+        public ClientCommunication(ISerialization serializer, string ip, int port)
         {
             this.serializer = serializer;
             this.Ip = ip;
             this.Port = port;
         }
-        private TcpClientCommunication() { }
+        private ClientCommunication() { }
 
 
         public void Connect()

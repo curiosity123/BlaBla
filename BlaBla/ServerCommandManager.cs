@@ -9,12 +9,12 @@ using System.Text;
 
 namespace BlaBlaServer
 {
-    public class ServerCommandManager
+    public class ServerCommandManager:IServerCommandManager
     {
         ServerSettings Settings;
-        TcpListenerCommunication Communication;
+        IServerCommunication Communication;
 
-        public ServerCommandManager(ServerSettings settings, TcpListenerCommunication communication )
+        public ServerCommandManager(ServerSettings settings, IServerCommunication communication )
         {
             Settings = settings;
             Communication = communication;
@@ -25,7 +25,7 @@ namespace BlaBlaServer
             
 
 
-        internal void CommandProcessor(TcpClient Client, Command Cmd)
+        public void CommandProcessor(TcpClient Client, Command Cmd)
         {
             if (Cmd == null)
                 return;
