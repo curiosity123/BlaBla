@@ -9,20 +9,22 @@ using System.Text;
 
 namespace BlaBlaServer
 {
-    public class ServerCommandManager:IServerCommandManager
+    public class ServerCommandManager : IServerCommandManager
     {
         ServerSettings Settings;
         IServerCommunication Communication;
+        List<Conversation> Conversations;
 
-        public ServerCommandManager(ServerSettings settings, IServerCommunication communication )
+        public ServerCommandManager(ServerSettings settings, IServerCommunication communication, List<Conversation> conv)
         {
             Settings = settings;
             Communication = communication;
             Communication.PackageReceived += CommandProcessor;
+            Conversations = conv;
         }
 
         private ServerCommandManager() { }
-            
+
 
 
         public void CommandProcessor(TcpClient Client, Command Cmd)
@@ -32,28 +34,67 @@ namespace BlaBlaServer
 
             if (Cmd.Type == PackageTypeEnum.Alive)
                 Alive(Client, Cmd);
+
             if (Cmd.Type == PackageTypeEnum.Register)
                 Register(Client, Cmd);
+
             if (Cmd.Type == PackageTypeEnum.Login)
                 Login(Client, Cmd);
+
             if (Cmd.Type == PackageTypeEnum.Logout)
                 Logout(Client, Cmd);
+
             if (Cmd.Type == PackageTypeEnum.Users)
                 SendUsers(Client, Cmd);
+
             if (Cmd.Type == PackageTypeEnum.Message)
-                Message(Client, Cmd);
+                SendMessage(Client, Cmd);
+
+            if (Cmd.Type == PackageTypeEnum.Conversation)
+                SendConversation(Client, Cmd);
         }
 
 
-        private void Message(TcpClient client, Command cmd)
+        private void SendMessage(TcpClient client, Command cmd)
         {
             Command messageCmd = new Command() { Type = PackageTypeEnum.Message, Content = cmd.Content };
             foreach (User u in (cmd.Content as Message).UserList)
             {
-                var cli = (from x in Settings.Sessions where u.NickName == x.User.NickName select x).FirstOrDefault();
-                if (cli != null)
+
+                var cli = (from x in Settings.Sessions where x.User!=null && u.NickName == x.User.NickName select x).FirstOrDefault();
+                if (cli != null)             
                     Communication.Send(cli.Client, messageCmd);
+
+                    User currentUser = (from x in Settings.Sessions where x.Client == client select x).First().User;
+                    Conversation conv = new Conversation()
+                    {
+                        Receiver = u,
+                        Sender = currentUser,
+                        Sentence = new Sentence()
+                        {
+                            TimeStamp = DateTime.UtcNow,
+                            Text = (messageCmd.Content as Message).Text
+                        }
+                    };
+                    Conversations.Add(conv);
+                
             }
+        }
+
+        private void SendConversation(TcpClient client, Command cmd)
+        {
+            Command Cmd = new Command() { Type = PackageTypeEnum.Conversation, Content = cmd.Content };
+
+            List<Conversation> conv = (from x in Conversations
+                        where
+                        x.Sender.Id == ((Cmd.Content as Conversation).Sender.Id) &&
+                        x.Sender.Id == ((Cmd.Content as Conversation).Receiver.Id) &&
+                        x.Receiver.Id == ((Cmd.Content as Conversation).Sender.Id) &&
+                        x.Receiver.Id == ((Cmd.Content as Conversation).Receiver.Id)
+                        select x).ToList<Conversation>();
+            Command c = new Command() { Type = PackageTypeEnum.Conversation, Content = conv };
+            Communication.Send(client, c);
+
         }
 
         private void SendUsers(TcpClient client, Command cmd)
@@ -101,7 +142,8 @@ namespace BlaBlaServer
         private void Alive(TcpClient client, Command cmd)
         {
             var session = (from x in Settings.Sessions
-                           where x.User.Id == (cmd.Content as User).Id
+                           where x.User!=null && 
+                           x.User.Id == (cmd.Content as User).Id
                            select x).FirstOrDefault();
 
             if (session != null)

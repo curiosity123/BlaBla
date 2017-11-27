@@ -11,16 +11,17 @@ using System.Threading;
 namespace BlaBlaClient
 {
 
-    class Client
+    public class Client
     {
         IClientCommunication Communication;
         public IClientCommandManager CommandManager;
         public ClientSettings Settings = new ClientSettings();
+        public List<Conversation> Conversations = new List<Conversation>();
 
         private Client(ISerialization serialization, string ip, int port)
         {
             Communication = new ClientCommunication(serialization, ip, port);
-            CommandManager = new ClientCommandManager(Settings, Communication);
+            CommandManager = new ClientCommandManager(Settings, Communication,Conversations);
         }
         private Client() { }
 

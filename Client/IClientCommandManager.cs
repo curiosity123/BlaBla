@@ -13,6 +13,7 @@ namespace BlaBlaClient
         void Login(User user);
         void Logout();
         void GetUsers();
+        void GetConversation(User user);
         void Message(string text, List<User> users);
     }
 }

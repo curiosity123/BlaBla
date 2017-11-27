@@ -11,6 +11,7 @@ namespace Common
         Logout,
         Users,
         Message,
-        Alive
+        Alive,
+        Conversation
     }
 }

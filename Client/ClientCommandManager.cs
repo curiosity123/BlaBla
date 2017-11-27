@@ -10,16 +10,19 @@ namespace BlaBlaClient
 
 
 
-    public class ClientCommandManager:IClientCommandManager
+    public class ClientCommandManager : IClientCommandManager
     {
         ClientSettings Settings;
         IClientCommunication communication;
-   
-        public ClientCommandManager(ClientSettings data, IClientCommunication communication)
+        List<Conversation> conversations;
+
+
+        public ClientCommandManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
         {
             this.communication = communication;
             this.communication.PackageReceived += CommandProcessor;
             this.Settings = data;
+            this.conversations = conversations;
         }
 
         public void CommandProcessor(TcpClient client, Command cmd)
@@ -47,6 +50,13 @@ namespace BlaBlaClient
             {
                 Message msg = cmd.Content as Message;
                 Console.WriteLine(msg.Sender.NickName + "# Wrote: " + msg.Text);
+            }
+
+            if (cmd.Type == PackageTypeEnum.Conversation)
+            {
+                conversations = cmd.Content as List<Conversation>;
+                foreach (Conversation c in conversations)
+                    Console.WriteLine(c.Sender.NickName +"Wrote: " +c.Sentence.Text);
             }
 
             if (cmd.Type == PackageTypeEnum.Register)
@@ -81,6 +91,12 @@ namespace BlaBlaClient
         public void GetUsers()
         {
             Command cmd = new Command() { Type = PackageTypeEnum.Users, Content = Settings.CurrentUser };
+            communication.Send(cmd);
+        }
+
+        public void GetConversation(User user)
+        {
+            Command cmd = new Command() { Type = PackageTypeEnum.Conversation, Content = new Conversation() { Receiver = user, Sender = Settings.CurrentUser } };
             communication.Send(cmd);
         }
 

@@ -43,6 +43,9 @@ namespace BlaBlaClient
                 if (cmd.KeyChar == 'u')
                     Users();
 
+                if (cmd.KeyChar == 'c')
+                    Conversation();
+
             }
         }
 
@@ -51,14 +54,17 @@ namespace BlaBlaClient
             Console.WriteLine("Enter message");
             string message = Console.ReadLine();
             Console.WriteLine("Enter consmer nick name");
-            List<User> usrs = new List<User>();
-            usrs.Add(new User() { NickName = Console.ReadLine() });
-            client.CommandManager.Message(message, usrs);    
+            client.CommandManager.Message(message, client.Settings.ActiveUsers);    
         }
 
         private static void Users()
         {
             client.CommandManager.GetUsers();
+        }
+
+        private static void Conversation()
+        {
+            client.CommandManager.GetConversation(client.Settings.CurrentUser);
         }
 
         private static void Logout()
@@ -98,6 +104,7 @@ namespace BlaBlaClient
             Console.WriteLine("o -logout");
             Console.WriteLine("m -send message");
             Console.WriteLine("u -get user list");
+            Console.WriteLine("c -get conversation");
             Console.WriteLine("q -exit");
         }
     }
