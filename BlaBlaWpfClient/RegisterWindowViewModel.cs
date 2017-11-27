@@ -10,17 +10,11 @@ using System.Windows.Input;
 
 namespace BlaBlaWpfClient
 {
-    public class BlaBlaAppViewModel : INotifyPropertyChanged
+    public class RegisterWindowViewModel : INotifyPropertyChanged
     {
 
-        public BlaBlaAppViewModel()
+        public RegisterWindowViewModel()
         {
-
-            RegisterWindow w = new RegisterWindow();
-            w.ShowDialog();
-
-            Client client = Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
-            client.Run();
 
         }
 

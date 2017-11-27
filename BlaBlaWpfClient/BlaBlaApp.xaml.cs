@@ -23,7 +23,6 @@ namespace BlaBlaWpfClient
         public BlaBlaApp()
         {
             InitializeComponent();
-
         }
     }
 }

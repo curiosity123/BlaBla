@@ -54,10 +54,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RegisterWindowViewModel.cs" />
     <Compile Include="BlaBlaAppViewModel.cs" />
     <Compile Include="RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RelayCommand.cs" />
     <Page Include="BlaBlaApp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
