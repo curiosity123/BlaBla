@@ -15,14 +15,13 @@ using System.Windows.Shapes;
 namespace BlaBlaWpfClient
 {
     /// <summary>
-    /// Interaction logic for RegisterWindow.xaml
+    /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class RegisterWindow : Window
+    public partial class LoginWindow : Window
     {
-        public RegisterWindow()
+        public LoginWindow()
         {
             InitializeComponent();
         }
-
     }
 }

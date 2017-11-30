@@ -10,25 +10,41 @@ using System.Windows.Input;
 
 namespace BlaBlaWpfClient
 {
-    public class RegisterWindowViewModel : INotifyPropertyChanged
+    public class RegisterWindowViewModel : PropertyChange
     {
+
+        public Client client;
+
 
         public RegisterWindowViewModel()
         {
-
         }
 
+        private string login="Enter your nickname";
 
-
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChangedEvent(string propertyName)
+        public string NickName
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
+            get { return login; }
+            set {
+                login = value;
+                RaisePropertyChangedEvent("NickName");
+            }
         }
+
+
+        private string password="Enter your password";
+
+        public string  Password
+        {
+            get { return password; }
+            set { password = value;
+                RaisePropertyChangedEvent("Password");
+            }
+        }
+
+
+
+
     }
 
 
