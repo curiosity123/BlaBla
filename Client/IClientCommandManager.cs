@@ -15,5 +15,13 @@ namespace BlaBlaClient
         void GetUsers();
         void GetConversation(User user);
         void Message(string text, List<User> users);
+
+
+        Action<Message> MessageReceived { get; set; }
+        Action<List<User>> UsersListReceived { get; set; }
+        Action<bool> RegistrationResultReceived { get; set; }
+        Action<List<Conversation>> ConversationReceived { get; set; }
+        Action LogoutPackageReceived { get; set; }
+        Action<bool> LoginReceived { get; set; }
     }
 }

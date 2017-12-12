@@ -16,13 +16,14 @@ namespace BlaBlaClient
         IClientCommunication communication;
         List<Conversation> conversations;
 
+        public Action<Message> MessageReceived { get; set; }
+        public Action<List<User>> UsersListReceived { get; set; }
+        public Action<bool> RegistrationResultReceived { get; set; }
+        public Action<List<Conversation>> ConversationReceived { get; set; }
+        public Action LogoutPackageReceived { get; set; }
+        public Action<bool> LoginReceived { get; set; }
 
-        public Action<Message> MessageReceived;
-        public Action<List<User>> UsersListReceived;
-        public Action<bool> RegistrationResultReceived;
-        public Action<List<Conversation>> ConversationReceived;
-        public Action LogoutPackageReceived;
-        public Action<bool> LoginReceived;
+
 
 
 

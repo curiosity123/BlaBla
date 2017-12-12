@@ -15,11 +15,12 @@ namespace BlaBlaWpfClient
 
         public BlaBlaAppViewModel()
         {
-
+    Client client = Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
             LoginWindow w = new LoginWindow();
+            (w.DataContext as LoginWindowViewModel).Client = client;
             w.ShowDialog();
 
-            Client client = Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
+        
             client.Run();
 
         }

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using BlaBlaClient;
 
 namespace BlaBlaWpfClient
 {
@@ -19,9 +20,13 @@ namespace BlaBlaWpfClient
     /// </summary>
     public partial class LoginWindow : Window
     {
+        private Client client;
+
         public LoginWindow()
         {
             InitializeComponent();
         }
+
+
     }
 }

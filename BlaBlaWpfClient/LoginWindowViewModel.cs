@@ -11,11 +11,16 @@ namespace BlaBlaWpfClient
 {
     public class LoginWindowViewModel:PropertyChange
     {
-        BlaBlaClient.Client Client;
+        public BlaBlaClient.Client Client;
 
         public LoginWindowViewModel()
         {
-            Client = BlaBlaClient.Client.Create(new XmlSerialization(), "127.0.0.1",8000);   
+            Client.CommandManager.RegistrationResultReceived = test;
+        }
+
+        private void test(bool obj)
+        {
+            throw new NotImplementedException();
         }
 
         public ICommand OpenRegistrationCmd { get { return new RelayCommand(CanOpenRegistrationCmd, OpenRegistration); } }
