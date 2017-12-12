@@ -17,6 +17,15 @@ namespace BlaBlaClient
         List<Conversation> conversations;
 
 
+        public Action<Message> MessageReceived;
+        public Action<List<User>> UsersListReceived;
+        public Action<bool> RegistrationResultReceived;
+        public Action<List<Conversation>> ConversationReceived;
+        public Action LogoutPackageReceived;
+        public Action<bool> LoginReceived;
+
+
+
         public ClientCommandManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
         {
             this.communication = communication;
@@ -27,13 +36,17 @@ namespace BlaBlaClient
 
         public void CommandProcessor(TcpClient client, Command cmd)
         {
+                
+
             if (cmd.Type == PackageTypeEnum.Users)
             {
                 Settings.ActiveUsers = cmd.Content as List<User>;
+                UsersListReceived?.Invoke(cmd.Content as List<User>);
             }
 
             if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
             {
+                LoginReceived?.Invoke((cmd.Content as User)!=null);
                 Settings.CurrentUser = cmd.Content as User;
                 communication.StartSendingAlivePackage(Settings.CurrentUser);
                 Console.WriteLine("You are logged in");
@@ -41,6 +54,7 @@ namespace BlaBlaClient
 
             if (cmd.Type == PackageTypeEnum.Logout)
             {
+                LogoutPackageReceived?.Invoke();
                 communication.StopSendingAlivePackage();
                 Settings.CurrentUser = new User();
                 Console.WriteLine("You are logout");
@@ -50,10 +64,13 @@ namespace BlaBlaClient
             {
                 Message msg = cmd.Content as Message;
                 Console.WriteLine(msg.Sender.NickName + "# Wrote: " + msg.Text);
+                MessageReceived?.Invoke(msg);
             }
 
             if (cmd.Type == PackageTypeEnum.Conversation)
             {
+                ConversationReceived?.Invoke(cmd.Content as List<Conversation>);
+
                 conversations = cmd.Content as List<Conversation>;
                 foreach (Conversation c in conversations)
                     Console.WriteLine(c.Sender.NickName +"Wrote: " +c.Sentence.Text);
@@ -61,7 +78,11 @@ namespace BlaBlaClient
 
             if (cmd.Type == PackageTypeEnum.Register)
             {
+                RegistrationResultReceived?.Invoke(cmd.Content as User != null);
+
                 User u = cmd.Content as User;
+
+
                 if (u != null)
                     Console.WriteLine("User " + u.NickName + " was registered succesfully! :)");
                 else

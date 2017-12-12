@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using BlaBlaClient;
+using Common;
 using Common.Serialization;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace BlaBlaClient
+namespace BlaBlaConsoleClient
 {
     class Program
     {
