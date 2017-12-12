@@ -55,7 +55,7 @@ namespace Common.Communication
             {
                 try
                 {
-                    Console.WriteLine("Listening for new cleint...");
+                    Console.WriteLine("Listening for new client...");
                     TcpClient client = Listener.AcceptTcpClient();
                     Settings.Sessions.Add(new Session() { Client = client, LastActivity = DateTime.UtcNow });
                     Console.WriteLine("Connected with new client " + client.Client.RemoteEndPoint.ToString());

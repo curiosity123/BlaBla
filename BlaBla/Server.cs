@@ -18,14 +18,14 @@ namespace BlaBlaServer
         ServerCommandManager CommandManager;
         ServerSettings Settings;
         IServerCommunication Communication;
-        List<Conversation> conversation = new List<Conversation>();
+        List<Conversation> Conversation = new List<Conversation>();
 
 
         private Server(ISerialization serialization, string ip, int port)
         {
             Settings = new ServerSettings();
             Communication = new ServerCommunication(serialization, Settings, ip, port);
-            CommandManager = new ServerCommandManager(Settings, Communication,conversation);
+            CommandManager = new ServerCommandManager(Settings, Communication,Conversation);
 
         }
 
