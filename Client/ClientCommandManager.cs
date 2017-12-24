@@ -45,7 +45,7 @@ namespace BlaBlaClient
                 UsersListReceived?.Invoke(cmd.Content as List<User>);
             }
 
-            if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
+            if (cmd.Type == PackageTypeEnum.Login)
             {
                 LoginReceived?.Invoke((cmd.Content as User)!=null);
                 Settings.CurrentUser = cmd.Content as User;

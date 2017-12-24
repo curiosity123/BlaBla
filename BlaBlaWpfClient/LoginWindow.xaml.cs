@@ -20,11 +20,11 @@ namespace BlaBlaWpfClient
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private Client client;
 
         public LoginWindow()
         {
             InitializeComponent();
+            (DataContext as LoginWindowViewModel).Result = Close;
         }
 
 

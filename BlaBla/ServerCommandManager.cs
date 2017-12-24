@@ -120,6 +120,7 @@ namespace BlaBlaServer
                     Communication.Send(client, new Command() { Type = PackageTypeEnum.Login, Content = usr });
                 }
             }
+            Communication.Send(client, new Command() { Type = PackageTypeEnum.Login, Content = null });
         }
 
         private void Register(TcpClient client, Command cmd)

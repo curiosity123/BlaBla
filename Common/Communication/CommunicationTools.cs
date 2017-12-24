@@ -62,7 +62,10 @@ namespace Common.Communication
                 stream.Write('\0');
                 stream.Flush();
             }
-            catch {  };
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
 

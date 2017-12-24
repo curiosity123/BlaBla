@@ -13,11 +13,11 @@
     
     <Grid Margin="143,203,0,0">
 
-        <TextBox Margin="-96,-79,96,101" >Password</TextBox>
-        <TextBox Margin="-96,-149,96,172" >Login</TextBox>
+        <TextBox Margin="-96,-79,96,101" Text="{Binding Login}" ></TextBox>
+        <TextBox Margin="-96,-149,96,172" Text="{Binding Password}"></TextBox>
 
 
-        <Button Margin="10,-10,24,10" Command="OpenRegistrationCmd">Go to registration</Button>
-        <Button Margin="-119,-10,170,10" Command="TryLoginCmd">Login</Button>
+        <Button Margin="10,-10,24,10" Command="{Binding  OpenRegistrationCmd}">Go to registration</Button>
+        <Button Margin="-119,-10,170,10" Command="{Binding TryLoginCmd}">Login</Button>
     </Grid>
 </Window>
