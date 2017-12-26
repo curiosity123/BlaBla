@@ -7,16 +7,17 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
+
 namespace BlaBlaConsoleClient
 {
     class Program
     {
-        static Client client;
+        static BlaBlaClient.Client client;
 
         static void Main(string[] args)
         {
             Thread.Sleep(1000);
-            client = Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
+            client = BlaBlaClient.Client.Create(new XmlSerialization(), "127.0.0.1", 8000);
             client.Run();
 
             ConsoleKeyInfo cmd;
