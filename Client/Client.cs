@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Client;
+using Common;
 using Common.Communication;
 using Common.Serialization;
 using System;
@@ -18,9 +19,12 @@ namespace BlaBlaClient
         public ClientSettings Settings = new ClientSettings();
         public List<Conversation> Conversations = new List<Conversation>();
 
+
+
         private Client(ISerialization serialization, string ip, int port)
         {
             Communication = new ClientCommunication(serialization, ip, port);
+
             CommandManager = new ClientCommandManager(Settings, Communication,Conversations);
         }
         private Client() { }

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using Client;
+using Client.ICommand;
 
 namespace BlaBlaClient
 {
@@ -17,6 +19,14 @@ namespace BlaBlaClient
         List<Conversation> conversations;
 
 
+        static IEnumerable<IClientCommandFactory> GetAvailableCommands()
+        {
+            return new IClientCommandFactory[]
+                {
+                    new LoginReceivedCommand()
+                };
+        }
+
         public ClientCommandManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
         {
             this.communication = communication;
@@ -27,17 +37,27 @@ namespace BlaBlaClient
 
         public void CommandProcessor(TcpClient client, Command cmd)
         {
+            CommandParser parser = new CommandParser(GetAvailableCommands());
+            var command = parser.ParseCommand(cmd, Settings, communication, conversations);
+
+            if (command != null)
+                command.Execute();
+
+
             if (cmd.Type == PackageTypeEnum.Users)
             {
                 Settings.ActiveUsers = cmd.Content as List<User>;
             }
 
-            if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
-            {
-                Settings.CurrentUser = cmd.Content as User;
-                communication.StartSendingAlivePackage(Settings.CurrentUser);
-                Console.WriteLine("You are logged in");
-            }
+            //if (cmd.Type == PackageTypeEnum.Login )
+            //{
+            //    if (cmd.Content is User)
+            //    {
+            //        Settings.CurrentUser = cmd.Content as User;
+            //        communication.StartSendingAlivePackage(Settings.CurrentUser);
+            //        Console.WriteLine("You are logged in");
+            //    }
+            //}
 
             if (cmd.Type == PackageTypeEnum.Logout)
             {
@@ -56,7 +76,7 @@ namespace BlaBlaClient
             {
                 conversations = cmd.Content as List<Conversation>;
                 foreach (Conversation c in conversations)
-                    Console.WriteLine(c.Sender.NickName +"Wrote: " +c.Sentence.Text);
+                    Console.WriteLine(c.Sender.NickName + "Wrote: " + c.Sentence.Text);
             }
 
             if (cmd.Type == PackageTypeEnum.Register)
