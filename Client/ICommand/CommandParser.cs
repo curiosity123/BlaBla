@@ -9,20 +9,21 @@ namespace Client.ICommand
 {
     public class CommandParser
     {
-        readonly IEnumerable<IClientCommandFactory> availableCommands;
+        readonly IEnumerable<ICommandFactory> availableCommands;
 
-        public CommandParser(IEnumerable<IClientCommandFactory> availableCommands)
+        public CommandParser(IEnumerable<ICommandFactory> availableCommands)
         {
             this.availableCommands = availableCommands;
         }
 
 
-        internal ICommand ParseCommand(Command param, ClientSettings Settings, IClientCommunication Communication, List<Conversation> ConversationList)
+        internal ICommand ParseCommand(Command param,ClientCommandManager manager)
         {
-            var command = availableCommands.FirstOrDefault(cmd => cmd.Type == param.Type);
+            var command = availableCommands.FirstOrDefault(Cmd => Cmd.Type == param.Type);
             if (command == null)
                 return null;
-             return command.MakeCommand(param, Settings, Communication, ConversationList);
+
+             return command.MakeCommand(param, manager);
         }
     }
 }

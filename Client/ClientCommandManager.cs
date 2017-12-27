@@ -14,10 +14,9 @@ namespace BlaBlaClient
 
     public class ClientCommandManager : IClientCommandManager
     {
-        ClientSettings Settings;
-        IClientCommunication communication;
-        List<Conversation> conversations;
-
+        public ClientSettings Settings;
+        public IClientCommunication communication;
+        public List<Conversation> Conversations;
         public Action<Message> MessageReceived { get; set; }
         public Action<List<User>> UsersListReceived { get; set; }
         public Action<bool> RegistrationResultReceived { get; set; }
@@ -29,82 +28,33 @@ namespace BlaBlaClient
 
 
 
-        static IEnumerable<IClientCommandFactory> GetAvailableCommands()
+        private static IEnumerable<ICommandFactory> GetAvailableReceivedCommands()
         {
-            return new IClientCommandFactory[]
+            return new ICommandFactory[]
                 {
-                    new LoginReceivedCommand()
+                    new LoginCommand(),
+                    new LogoutCommand(),
+                    new UsersCommand(),
+                    new MessageCommand(),
+                    new RegisterCommand(),
+                    new ConversationCommand(),
+                    new UnsupportedCommand()
                 };
         }
+
+        CommandParser parser = new CommandParser(GetAvailableReceivedCommands());
 
         public ClientCommandManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
         {
             this.communication = communication;
             this.communication.PackageReceived += CommandProcessor;
             this.Settings = data;
-            this.conversations = conversations;
+            this.Conversations = conversations;
         }
 
         public void CommandProcessor(TcpClient client, Command cmd)
         {
-                
-
-            CommandParser parser = new CommandParser(GetAvailableCommands());
-            var command = parser.ParseCommand(cmd, Settings, communication, conversations);
-
-            if (command != null)
-                command.Execute();
-
-
-            if (cmd.Type == PackageTypeEnum.Users)
-            {
-                Settings.ActiveUsers = cmd.Content as List<User>;
-                UsersListReceived?.Invoke(cmd.Content as List<User>);
-            }
-
-            if (cmd.Type == PackageTypeEnum.Login && cmd.Content is User)
-            {
-                Settings.CurrentUser = cmd.Content as User;
-                communication.StartSendingAlivePackage(Settings.CurrentUser);
-                Console.WriteLine("You are logged in");
-            }
-
-            if (cmd.Type == PackageTypeEnum.Logout)
-            {
-                LogoutPackageReceived?.Invoke();
-                communication.StopSendingAlivePackage();
-                Settings.CurrentUser = new User();
-                Console.WriteLine("You are logout");
-            }
-
-            if (cmd.Type == PackageTypeEnum.Message)
-            {
-                Message msg = cmd.Content as Message;
-                Console.WriteLine(msg.Sender.NickName + "# Wrote: " + msg.Text);
-                MessageReceived?.Invoke(msg);
-            }
-
-            if (cmd.Type == PackageTypeEnum.Conversation)
-            {
-                ConversationReceived?.Invoke(cmd.Content as List<Conversation>);
-
-                conversations = cmd.Content as List<Conversation>;
-                foreach (Conversation c in conversations)
-                    Console.WriteLine(c.Sender.NickName + "Wrote: " + c.Sentence.Text);
-            }
-
-            if (cmd.Type == PackageTypeEnum.Register)
-            {
-                RegistrationResultReceived?.Invoke(cmd.Content as User != null);
-
-                User u = cmd.Content as User;
-
-
-                if (u != null)
-                    Console.WriteLine("User " + u.NickName + " was registered succesfully! :)");
-                else
-                    Console.WriteLine("User " + u.NickName + " was not registered, Try different nickname... :(");
-            }
+            parser.ParseCommand(cmd, this)?.Execute();
         }
 
 
