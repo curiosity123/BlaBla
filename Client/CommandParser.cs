@@ -1,11 +1,12 @@
 ﻿using BlaBlaClient;
 using Common;
+using Common.ICommandPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Client.ICommand
+namespace Client
 {
     public class CommandParser
     {
@@ -17,7 +18,7 @@ namespace Client.ICommand
         }
 
 
-        internal ICommand ParseCommand(Command param,ClientCommandManager manager)
+        internal ICommand ParseCommand(DataPackage param,PackageManager manager)
         {
             var command = availableCommands.FirstOrDefault(Cmd => Cmd.Type == param.Type);
             if (command == null)

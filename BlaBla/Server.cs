@@ -14,8 +14,7 @@ namespace BlaBlaServer
 {
     public class Server
     {
-        ISerialization serialization;
-        ServerCommandManager CommandManager;
+        ServerPackageManager CommandManager;
         ServerSettings Settings;
         IServerCommunication Communication;
         List<Conversation> Conversation = new List<Conversation>();
@@ -25,8 +24,7 @@ namespace BlaBlaServer
         {
             Settings = new ServerSettings();
             Communication = new ServerCommunication(serialization, Settings, ip, port);
-            CommandManager = new ServerCommandManager(Settings, Communication,Conversation);
-
+            CommandManager = new ServerPackageManager(Settings, Communication,Conversation);
         }
 
         private Server() { }

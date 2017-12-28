@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using BlaBlaClient;
-using Client.ICommand;
 using Common;
+using Common.ICommandPattern;
 
-namespace Client.ICommand
+namespace Client.Commands
 {
     public class UsersCommand : ICommand, ICommandFactory
     {
 
-        public ClientCommandManager Manager { get; set; }
-        public Command Cmd { get; set; }
+        public PackageManager Manager { get; set; }
+        public DataPackage Cmd { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Users; }
 
 
@@ -25,7 +25,7 @@ namespace Client.ICommand
             }
         }
 
-        ICommand ICommandFactory.MakeCommand(Command Cmd, ClientCommandManager manager)
+        ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)
             =>  new UsersCommand() { Cmd = Cmd, Manager = manager };
         
     }

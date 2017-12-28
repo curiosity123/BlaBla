@@ -20,7 +20,7 @@ namespace Common.Communication
         private ISerialization serialization = new XmlSerialization();
         private ServerSettings Settings;
 
-        public event Action<TcpClient, Command> PackageReceived;
+        public event Action<TcpClient, DataPackage> PackageReceived;
 
 
 

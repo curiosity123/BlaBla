@@ -5,18 +5,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using Client;
-using Client.ICommand;
+using Client.Commands;
+using Common.ICommandPattern;
 
 namespace BlaBlaClient
 {
-
-
-
-    public class ClientCommandManager : IClientCommandManager
+    public class PackageManager 
     {
         public ClientSettings Settings;
-        public IClientCommunication communication;
+        public IClientCommunication Communication;
         public List<Conversation> Conversations;
+
+
         public Action<Message> MessageReceived { get; set; }
         public Action<List<User>> UsersListReceived { get; set; }
         public Action<bool> RegistrationResultReceived { get; set; }
@@ -26,9 +26,7 @@ namespace BlaBlaClient
 
 
 
-
-
-        private static IEnumerable<ICommandFactory> GetAvailableReceivedCommands()
+        private static IEnumerable<ICommandFactory> GetAvailableCommands()
         {
             return new ICommandFactory[]
                 {
@@ -41,58 +39,58 @@ namespace BlaBlaClient
                     new UnsupportedCommand()
                 };
         }
+        CommandParser PackageReceivedParser;
 
-        CommandParser parser = new CommandParser(GetAvailableReceivedCommands());
 
-        public ClientCommandManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
+        public PackageManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
         {
-            this.communication = communication;
-            this.communication.PackageReceived += CommandProcessor;
+            this.Communication = communication;
+            this.Communication.PackageReceived += PackageProcessor;
             this.Settings = data;
             this.Conversations = conversations;
+            PackageReceivedParser = new CommandParser(GetAvailableCommands());
         }
 
-        public void CommandProcessor(TcpClient client, Command cmd)
-        {
-            parser.ParseCommand(cmd, this)?.Execute();
-        }
+        public void PackageProcessor(TcpClient client, DataPackage cmd)
+            => PackageReceivedParser.ParseCommand(cmd, this)?.Execute();
+        
 
 
         public void RegisterNewUser(User user)
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Register, Content = user };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Register, Content = user };
+            Communication.Send(cmd);
         }
 
         public void Login(User user)
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Login, Content = user };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Login, Content = user };
+            Communication.Send(cmd);
         }
 
         public void Logout()
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
+            Communication.Send(cmd);
         }
 
         public void GetUsers()
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Users, Content = Settings.CurrentUser };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Users, Content = Settings.CurrentUser };
+            Communication.Send(cmd);
         }
 
         public void GetConversation(User user)
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Conversation, Content = new Conversation() { Receiver = user, Sender = Settings.CurrentUser } };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Conversation, Content = new Conversation() { Receiver = user, Sender = Settings.CurrentUser } };
+            Communication.Send(cmd);
         }
 
         public void Message(string text, List<User> users)
         {
             Message msg = new Common.Message() { Sender = Settings.CurrentUser, UserList = users, Text = text };
-            Command cmd = new Command() { Type = PackageTypeEnum.Message, Content = msg };
-            communication.Send(cmd);
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Message, Content = msg };
+            Communication.Send(cmd);
         }
     }
 }

@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using BlaBlaClient;
-using Client.ICommand;
 using Common;
+using Common.ICommandPattern;
 
-namespace Client.ICommand
+namespace Client.Commands
 {
     public class ConversationCommand : ICommand, ICommandFactory
     {
 
-        public ClientCommandManager Manager { get; set; }
-        public Command Cmd { get; set; }
+        public PackageManager Manager { get; set; }
+        public DataPackage Cmd { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Conversation; }
 
 
@@ -23,7 +23,7 @@ namespace Client.ICommand
                 Console.WriteLine(c.Sender.NickName + "Wrote: " + c.Sentence.Text);
         }
 
-        ICommand ICommandFactory.MakeCommand(Command Cmd, ClientCommandManager manager)
+        ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)
             =>  new ConversationCommand() { Cmd = Cmd, Manager = manager };
         
     }

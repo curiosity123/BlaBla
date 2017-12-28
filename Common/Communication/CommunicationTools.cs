@@ -10,7 +10,7 @@ namespace Common.Communication
 {
     public static class CommunicationTools
     {
-        public static void Receive(ISerialization serializer, TcpClient Session, Action<TcpClient, Common.Command> MessageReceived)
+        public static void Receive(ISerialization serializer, TcpClient Session, Action<TcpClient, Common.DataPackage> MessageReceived)
         {
             NetworkStream stream = Session.GetStream();
             new Thread(() =>
@@ -35,7 +35,7 @@ namespace Common.Communication
                             packs = packs.Where(w => w != "").ToArray();
                             foreach (string s in packs)
                             {
-                                Common.Command package = serializer.Deserialize<Command>(Encoding.ASCII.GetBytes(s));
+                                Common.DataPackage package = serializer.Deserialize<DataPackage>(Encoding.ASCII.GetBytes(s));
                                 MessageReceived(Session, package);
                             }
                             data.Clear();

@@ -9,7 +9,7 @@ namespace BlaBlaClient
 
     public interface IClientCommunication
     {
-        event Action<TcpClient, Command> PackageReceived;
+        event Action<TcpClient, DataPackage> PackageReceived;
         void Connect();
         void Disconnect();
         void Send<T>(T item);

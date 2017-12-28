@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using BlaBlaClient;
-using Client.ICommand;
 using Common;
+using Common.ICommandPattern;
 
-namespace Client.ICommand
+namespace Client.Commands
 {
     public class LoginCommand : ICommand, ICommandFactory
     {
-        public Command Cmd { get; set; }
-        public ClientCommandManager Manager { get; set; }
+        public DataPackage Cmd { get; set; }
+        public PackageManager Manager { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Login; }
 
 
@@ -19,14 +19,14 @@ namespace Client.ICommand
             if (Cmd.Content is User)
             {
                 Manager.Settings.CurrentUser = Cmd.Content as User;
-                Manager.communication.StartSendingAlivePackage(Manager.Settings.CurrentUser);
+                Manager.Communication.StartSendingAlivePackage(Manager.Settings.CurrentUser);
                 Console.WriteLine("You are logged in");
                 Manager.LogoutPackageReceived?.Invoke();
             }
 
         }
 
-        ICommand ICommandFactory.MakeCommand(Command Cmd, ClientCommandManager manager )
+        ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager )
         {
             return new LoginCommand() { Cmd = Cmd, Manager = manager };
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Client.ICommand
+namespace Common.ICommandPattern
 {
     public interface ICommand
     {

@@ -15,7 +15,7 @@ namespace BlaBlaClient
     public class Client
     {
         IClientCommunication Communication;
-        public IClientCommandManager CommandManager;
+        public PackageManager CommandManager;
         public ClientSettings Settings = new ClientSettings();
         public List<Conversation> Conversations = new List<Conversation>();
 
@@ -25,7 +25,7 @@ namespace BlaBlaClient
         {
             Communication = new ClientCommunication(serialization, ip, port);
 
-            CommandManager = new ClientCommandManager(Settings, Communication,Conversations);
+            CommandManager = new PackageManager(Settings, Communication,Conversations);
         }
         private Client() { }
 

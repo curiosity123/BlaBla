@@ -20,7 +20,7 @@ namespace Common
         private int Port;
         TcpClient tcpClient;
         StreamWriter clientStreamWriter;
-        public event Action<TcpClient,Command> PackageReceived;
+        public event Action<TcpClient,DataPackage> PackageReceived;
 
         ISerialization serializer;
 
@@ -57,7 +57,7 @@ namespace Common
             tcpClient.Close();
         }
 
-        private void Receive(Action<TcpClient, Common.Command> MessageReceived)
+        private void Receive(Action<TcpClient, Common.DataPackage> MessageReceived)
         {
             CommunicationTools.Receive(serializer, tcpClient, MessageReceived);
         }
@@ -77,7 +77,7 @@ namespace Common
 
         private void Alive(User CurrentUser)
         {
-            Command cmd = new Command() { Type = PackageTypeEnum.Alive, Content = CurrentUser };
+            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Alive, Content = CurrentUser };
             Send(cmd);
         }
 

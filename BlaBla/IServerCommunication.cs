@@ -8,7 +8,7 @@ namespace BlaBlaServer
 {
     public interface IServerCommunication
     {
-        event Action<TcpClient, Command> PackageReceived;
+        event Action<TcpClient, DataPackage> PackageReceived;
         void Connect();
         void Disconnect();
         void Send<T>(TcpClient Client, T item);
