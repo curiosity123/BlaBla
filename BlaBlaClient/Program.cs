@@ -56,22 +56,22 @@ namespace BlaBlaConsoleClient
             Console.WriteLine("Enter message");
             string message = Console.ReadLine();
             Console.WriteLine("Enter consmer nick name");
-            client.CommandManager.Message(message, client.Settings.ActiveUsers);    
+            client.PackageManager.Message(message, client.Settings.ActiveUsers);    
         }
 
         private static void Users()
         {
-            client.CommandManager.GetUsers();
+            client.PackageManager.GetUsers();
         }
 
         private static void Conversation()
         {
-            client.CommandManager.GetConversation(client.Settings.CurrentUser);
+            client.PackageManager.GetConversation(client.Settings.CurrentUser);
         }
 
         private static void Logout()
         {
-            client.CommandManager.Logout();
+            client.PackageManager.Logout();
         }
 
         private static void Login()
@@ -81,7 +81,7 @@ namespace BlaBlaConsoleClient
             usr.NickName = Console.ReadLine();
             Console.WriteLine("Enter password");
             usr.Password = Console.ReadLine();
-            client.CommandManager.Login(usr);
+            client.PackageManager.Login(usr);
         }
 
         private static void Register()
@@ -91,7 +91,7 @@ namespace BlaBlaConsoleClient
             usr.NickName = Console.ReadLine();
             Console.WriteLine("Enter password");
             usr.Password = Console.ReadLine();
-            client.CommandManager.RegisterNewUser(usr);
+            client.PackageManager.RegisterNewUser(usr);
         }
 
 

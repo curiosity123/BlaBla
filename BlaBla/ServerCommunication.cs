@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BlaBlaServer;
+using System;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using BlaBlaServer;
-using Common.Serialization;
-using System.Linq;
-using System.IO;
 
 namespace Common.Communication
 {
-    public class ServerCommunication: IServerCommunication
+    public class ServerCommunication
     {
         private string Ip;
         private int Port;
         private TcpListener Listener;
         private bool isRunning;
-        private ISerialization serialization = new XmlSerialization();
+        private ISerialization Serialization;
         private ServerSettings Settings;
 
         public event Action<TcpClient, DataPackage> PackageReceived;
@@ -26,7 +23,7 @@ namespace Common.Communication
 
         public ServerCommunication(ISerialization serialization, ServerSettings settings, string ip, int port)
         {
-            this.serialization = serialization;
+            this.Serialization = serialization;
             this.Settings = settings;
             Ip = ip;
             Port = port;
@@ -59,7 +56,7 @@ namespace Common.Communication
                     TcpClient client = Listener.AcceptTcpClient();
                     Settings.Sessions.Add(new Session() { Client = client, LastActivity = DateTime.UtcNow });
                     Console.WriteLine("Connected with new client " + client.Client.RemoteEndPoint.ToString());
-                    CommunicationTools.Receive(serialization, client, PackageReceived);
+                    CommunicationTools.Receive(Serialization, client, PackageReceived);
                 }
                 catch
                 {
@@ -90,7 +87,7 @@ namespace Common.Communication
         public void Send<T>(TcpClient Client, T item)
         {
             if(CommunicationTools.IsConnected(Client))
-                CommunicationTools.Send(serialization, new StreamWriter(Client.GetStream()), item);
+                CommunicationTools.Send(Serialization, new StreamWriter(Client.GetStream()), item);
         }
     }
 

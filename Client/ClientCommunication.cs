@@ -14,7 +14,7 @@ namespace Common
 
 
 
-    public class ClientCommunication:IClientCommunication
+    public class ClientCommunication
     {
         private string Ip;
         private int Port;
@@ -50,6 +50,7 @@ namespace Common
         }
 
         private bool IsAlive = false;
+
         public void Disconnect()
         {
             IsAlive = false;

@@ -11,14 +11,14 @@ using System.Text;
 
 namespace BlaBlaServer
 {
-    public class ServerPackageManager 
+    public class ServerPackageManager
     {
         internal ServerSettings Settings;
-        internal IServerCommunication Communication;
+        internal ServerCommunication Communication;
         internal List<Conversation> Conversations;
         CommandParser PackageReceivedParser;
 
-        public ServerPackageManager(ServerSettings settings, IServerCommunication communication, List<Conversation> conv)
+        public ServerPackageManager(ServerSettings settings, ServerCommunication communication, List<Conversation> conv)
         {
             Settings = settings;
             Communication = communication;
@@ -26,6 +26,8 @@ namespace BlaBlaServer
             Conversations = conv;
             PackageReceivedParser = new CommandParser(GetAvailableCommands());
         }
+
+        private ServerPackageManager() { }
 
         private static IEnumerable<ICommandFactory> GetAvailableCommands()
         {
@@ -40,9 +42,6 @@ namespace BlaBlaServer
                     new ConversationCommand()
                 };
         }
-
-        private ServerPackageManager() { }
-
 
 
         public void CommandProcessor(TcpClient Client, DataPackage Cmd)

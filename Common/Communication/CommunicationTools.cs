@@ -51,8 +51,6 @@ namespace Common.Communication
             }).Start();
         }
 
-
-
         public static void Send<T>(ISerialization serializer, StreamWriter stream, T item)
         {
             try
@@ -67,7 +65,6 @@ namespace Common.Communication
                 Console.WriteLine(ex.ToString());
             }
         }
-
 
         public static bool IsConnected(TcpClient Client)
         {

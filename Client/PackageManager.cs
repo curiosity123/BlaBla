@@ -13,7 +13,7 @@ namespace BlaBlaClient
     public class PackageManager 
     {
         public ClientSettings Settings;
-        public IClientCommunication Communication;
+        public ClientCommunication Communication;
         public List<Conversation> Conversations;
 
 
@@ -42,7 +42,7 @@ namespace BlaBlaClient
         CommandParser PackageReceivedParser;
 
 
-        public PackageManager(ClientSettings data, IClientCommunication communication, List<Conversation> conversations)
+        public PackageManager(ClientSettings data, ClientCommunication communication, List<Conversation> conversations)
         {
             this.Communication = communication;
             this.Communication.PackageReceived += PackageProcessor;

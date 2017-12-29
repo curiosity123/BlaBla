@@ -14,17 +14,17 @@ namespace BlaBlaServer
 {
     public class Server
     {
-        ServerPackageManager CommandManager;
-        ServerSettings Settings;
-        IServerCommunication Communication;
-        List<Conversation> Conversation = new List<Conversation>();
+        readonly ServerPackageManager PackageManager;
+        readonly ServerSettings AppSettings;
+        readonly ServerCommunication Communication;
+        readonly List<Conversation> Conversation = new List<Conversation>();
 
 
         private Server(ISerialization serialization, string ip, int port)
         {
-            Settings = new ServerSettings();
-            Communication = new ServerCommunication(serialization, Settings, ip, port);
-            CommandManager = new ServerPackageManager(Settings, Communication,Conversation);
+            AppSettings = new ServerSettings();
+            Communication = new ServerCommunication(serialization, AppSettings, ip, port);
+            PackageManager = new ServerPackageManager(AppSettings, Communication,Conversation);
         }
 
         private Server() { }
