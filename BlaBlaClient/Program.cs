@@ -45,9 +45,6 @@ namespace BlaBlaConsoleClient
                 if (cmd.KeyChar == 'u')
                     Users();
 
-                if (cmd.KeyChar == 'c')
-                    Conversation();
-
             }
         }
 
@@ -64,10 +61,6 @@ namespace BlaBlaConsoleClient
             client.PackageManager.GetUsers();
         }
 
-        private static void Conversation()
-        {
-            client.PackageManager.GetConversation(client.Settings.CurrentUser);
-        }
 
         private static void Logout()
         {

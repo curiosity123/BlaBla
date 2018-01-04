@@ -28,18 +28,6 @@ namespace BlaBlaServer.Commands
                     Manager.Communication.Send(cli.Client, messageCmd);
 
                 User currentUser = (from x in Manager.Settings.Sessions where x.Client == Client select x).First().User;
-                Conversation conv = new Conversation()
-                {
-                    Receiver = u,
-                    Sender = currentUser,
-                    Sentence = new Sentence()
-                    {
-                        TimeStamp = DateTime.UtcNow,
-                        Text = (messageCmd.Content as Message).Text
-                    }
-                };
-                Manager.Conversations.Add(conv);
-
             }
         }
 

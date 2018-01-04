@@ -40,12 +40,7 @@ namespace Common.Communication
                             }
                             data.Clear();
                         }
-
-
-
                     }
-
-
                     Thread.Sleep(1);
                 }
             }).Start();

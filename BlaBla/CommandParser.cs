@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using BlaBlaServer.Commands;
+using Common;
 using Common.ICommandPattern;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace BlaBlaServer
         {
             var command = availableCommands.FirstOrDefault(Cmd => Cmd.Type == param.Type);
             if (command == null)
-                return null;
+                return new UnsupportedCommand() { Client = Client, Cmd = param, Manager = manager };
 
              return command.MakeCommand(Client ,param, manager);
         }

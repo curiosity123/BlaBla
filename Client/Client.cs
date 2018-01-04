@@ -17,15 +17,14 @@ namespace BlaBlaClient
         ClientCommunication Communication;
         public PackageManager PackageManager;
         public ClientSettings Settings = new ClientSettings();
-        public List<Conversation> Conversations = new List<Conversation>();
-
 
 
         private Client(ISerialization serialization, string ip, int port)
         {
             Communication = new ClientCommunication(serialization, ip, port);
-            PackageManager = new PackageManager(Settings, Communication,Conversations);
+            PackageManager = new PackageManager(Settings, Communication);
         }
+
         private Client() { }
 
         public static Client Create(ISerialization serialization, string ip, int port)

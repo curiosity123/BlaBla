@@ -12,7 +12,6 @@ namespace Common
         Users,
         Message,
         Alive,
-        Conversation,
         Unsupported
     }
 }

@@ -9,20 +9,17 @@ namespace Client.Commands
 {
     public class UnsupportedCommand : ICommand, ICommandFactory
     {
-
-
         public PackageManager Manager { get; set; }
         public DataPackage Cmd { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Unsupported; }
 
 
-
         public void Execute()
         {
+            Console.WriteLine("Unsupported command");
         }
 
         ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)
                => new UnsupportedCommand() { Cmd = Cmd, Manager = manager };
-
     }
 }

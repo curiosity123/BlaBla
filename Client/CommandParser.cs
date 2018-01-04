@@ -1,4 +1,5 @@
 ﻿using BlaBlaClient;
+using Client.Commands;
 using Common;
 using Common.ICommandPattern;
 using System;
@@ -18,13 +19,13 @@ namespace Client
         }
 
 
-        internal ICommand ParseCommand(DataPackage param,PackageManager manager)
+        internal ICommand ParseCommand(DataPackage param, PackageManager manager)
         {
             var command = availableCommands.FirstOrDefault(Cmd => Cmd.Type == param.Type);
             if (command == null)
-                return null;
+                return new UnsupportedCommand() { Cmd = param, Manager = manager };
 
-             return command.MakeCommand(param, manager);
+            return command.MakeCommand(param, manager);
         }
     }
 }

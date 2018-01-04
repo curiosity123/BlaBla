@@ -10,50 +10,47 @@ using Common.ICommandPattern;
 
 namespace BlaBlaClient
 {
-    public class PackageManager 
+    public class PackageManager
     {
-        public ClientSettings Settings;
-        public ClientCommunication Communication;
-        public List<Conversation> Conversations;
+        public readonly ClientSettings Settings;
+        public readonly ClientCommunication Communication;
+        private readonly CommandParser PackageReceivedParser;
 
 
         public Action<Message> MessageReceived { get; set; }
         public Action<List<User>> UsersListReceived { get; set; }
         public Action<bool> RegistrationResultReceived { get; set; }
-        public Action<List<Conversation>> ConversationReceived { get; set; }
         public Action LogoutPackageReceived { get; set; }
         public Action<bool> LoginReceived { get; set; }
 
 
 
-        private static IEnumerable<ICommandFactory> GetAvailableCommands()
+
+        public PackageManager(ClientSettings data, ClientCommunication communication)
         {
-            return new ICommandFactory[]
-                {
+            Communication = communication;
+            Communication.PackageReceived += PackageProcessor;
+            Settings = data;
+            PackageReceivedParser = new CommandParser(GetAvailableCommands());
+        }
+
+        private PackageManager() { }
+
+
+        private static IEnumerable<ICommandFactory> GetAvailableCommands()
+            => new ICommandFactory[]
+            {
                     new LoginCommand(),
                     new LogoutCommand(),
                     new UsersCommand(),
                     new MessageCommand(),
                     new RegisterCommand(),
-                    new ConversationCommand(),
                     new UnsupportedCommand()
-                };
-        }
-        CommandParser PackageReceivedParser;
-
-
-        public PackageManager(ClientSettings data, ClientCommunication communication, List<Conversation> conversations)
-        {
-            this.Communication = communication;
-            this.Communication.PackageReceived += PackageProcessor;
-            this.Settings = data;
-            this.Conversations = conversations;
-            PackageReceivedParser = new CommandParser(GetAvailableCommands());
-        }
+            };
 
         public void PackageProcessor(TcpClient client, DataPackage cmd)
             => PackageReceivedParser.ParseCommand(cmd, this)?.Execute();
-        
+
 
 
         public void RegisterNewUser(User user)
@@ -77,12 +74,6 @@ namespace BlaBlaClient
         public void GetUsers()
         {
             DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Users, Content = Settings.CurrentUser };
-            Communication.Send(cmd);
-        }
-
-        public void GetConversation(User user)
-        {
-            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Conversation, Content = new Conversation() { Receiver = user, Sender = Settings.CurrentUser } };
             Communication.Send(cmd);
         }
 

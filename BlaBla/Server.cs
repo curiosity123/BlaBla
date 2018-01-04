@@ -17,14 +17,12 @@ namespace BlaBlaServer
         readonly ServerPackageManager PackageManager;
         readonly ServerSettings AppSettings;
         readonly ServerCommunication Communication;
-        readonly List<Conversation> Conversation = new List<Conversation>();
-
 
         private Server(ISerialization serialization, string ip, int port)
         {
             AppSettings = new ServerSettings();
             Communication = new ServerCommunication(serialization, AppSettings, ip, port);
-            PackageManager = new ServerPackageManager(AppSettings, Communication,Conversation);
+            PackageManager = new ServerPackageManager(AppSettings, Communication);
         }
 
         private Server() { }
