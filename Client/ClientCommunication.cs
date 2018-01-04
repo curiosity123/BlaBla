@@ -14,7 +14,7 @@ namespace Common
 
 
 
-    public class ClientCommunication
+    public class Communication
     {
         private string Ip;
         private int Port;
@@ -24,13 +24,13 @@ namespace Common
 
         ISerialization serializer;
 
-        public ClientCommunication(ISerialization serializer, string ip, int port)
+        public Communication(ISerialization serializer, string ip, int port)
         {
             this.serializer = serializer;
             this.Ip = ip;
             this.Port = port;
         }
-        private ClientCommunication() { }
+        private Communication() { }
 
 
         public void Connect()

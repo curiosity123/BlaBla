@@ -12,7 +12,7 @@ namespace BlaBlaServer.Commands
     public class UnsupportedCommand : ICommand, ICommandFactory
     {
         public DataPackage Cmd { get; set; }
-        public ServerPackageManager Manager { get; set; }
+        public PackageManager Manager { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Logout; }
         public TcpClient Client { get; set; }
 
@@ -22,7 +22,7 @@ namespace BlaBlaServer.Commands
             Console.WriteLine("Unsupported command");
         }
 
-        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, ServerPackageManager manager )
+        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )
         {
             return new UnsupportedCommand() { Cmd = Cmd, Manager = manager ,Client = Client };
         }

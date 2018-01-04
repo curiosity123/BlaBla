@@ -14,15 +14,15 @@ namespace BlaBlaClient
 
     public class Client
     {
-        ClientCommunication Communication;
-        public PackageManager PackageManager;
-        public ClientSettings Settings = new ClientSettings();
+        Communication communication;
+        public PackageManager packageManager;
+        public Settings settings = new Settings();
 
 
         private Client(ISerialization serialization, string ip, int port)
         {
-            Communication = new ClientCommunication(serialization, ip, port);
-            PackageManager = new PackageManager(Settings, Communication);
+            communication = new Communication(serialization, ip, port);
+            packageManager = new PackageManager(settings, communication);
         }
 
         private Client() { }
@@ -36,11 +36,11 @@ namespace BlaBlaClient
 
         public void Run()
         {
-            Communication.Connect();
+            communication.Connect();
         }
         public void Stop()
         {
-            Communication.Disconnect();
+            communication.Disconnect();
         }
     }
 }

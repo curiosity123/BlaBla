@@ -8,37 +8,37 @@ using System.Threading;
 
 namespace Common.Communication
 {
-    public class ServerCommunication
+    public class Communication
     {
         private string Ip;
         private int Port;
         private TcpListener Listener;
         private bool isRunning;
         private ISerialization Serialization;
-        private ServerSettings Settings;
+        private Settings Settings;
 
         public event Action<TcpClient, DataPackage> PackageReceived;
 
 
 
-        public ServerCommunication(ISerialization serialization, ServerSettings settings, string ip, int port)
+        public Communication(ISerialization serialization, Settings settings, string ip, int port)
         {
             this.Serialization = serialization;
             this.Settings = settings;
             Ip = ip;
             Port = port;
         }
-        private ServerCommunication(){ }
+        private Communication(){ }
 
 
-        public void Connect()
+        public void Start()
         {
             Listener = new TcpListener(IPAddress.Parse(Ip), Port);
             Listener.Start();
             new Thread(SessionWorker).Start();
         }
 
-        public void Disconnect()
+        public void Stop()
         {
             isRunning = false;
         }

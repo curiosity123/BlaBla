@@ -12,7 +12,7 @@ namespace BlaBlaServer.Commands
     public class AliveCommand : ICommand, ICommandFactory
     {
         public DataPackage Cmd { get; set; }
-        public ServerPackageManager Manager { get; set; }
+        public PackageManager Manager { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Alive; }
         public TcpClient Client { get; set; }
 
@@ -29,7 +29,7 @@ namespace BlaBlaServer.Commands
 
         }
 
-        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, ServerPackageManager manager )
+        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )
         {
             return new AliveCommand() { Cmd = Cmd, Manager = manager ,Client = Client };
         }

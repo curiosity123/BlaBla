@@ -12,11 +12,11 @@ namespace BlaBlaServer
     public interface ICommandFactory
     {
         DataPackage Cmd { get; set; }
-        ServerPackageManager Manager { get; set; }
+        PackageManager Manager { get; set; }
         PackageTypeEnum Type { get; }
         TcpClient Client { get; set; }
 
 
-        ICommand MakeCommand(TcpClient Client ,DataPackage Cmd, ServerPackageManager manager);
+        ICommand MakeCommand(TcpClient Client ,DataPackage Cmd, PackageManager manager);
     }
 }

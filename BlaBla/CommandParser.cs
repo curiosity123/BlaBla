@@ -19,7 +19,7 @@ namespace BlaBlaServer
         }
 
 
-        internal ICommand ParseCommand(TcpClient Client,DataPackage param, ServerPackageManager manager)
+        internal ICommand ParseCommand(TcpClient Client,DataPackage param, PackageManager manager)
         {
             var command = availableCommands.FirstOrDefault(Cmd => Cmd.Type == param.Type);
             if (command == null)

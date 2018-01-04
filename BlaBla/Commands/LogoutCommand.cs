@@ -8,7 +8,7 @@ namespace BlaBlaServer.Commands
     public class LogoutCommand : ICommand, ICommandFactory
     {
         public DataPackage Cmd { get; set; }
-        public ServerPackageManager Manager { get; set; }
+        public PackageManager Manager { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Logout; }
         public TcpClient Client { get; set; }
 
@@ -19,7 +19,7 @@ namespace BlaBlaServer.Commands
             Manager.Communication.Send(Client, new DataPackage() { Type = PackageTypeEnum.Logout, Content = null });
         }
 
-        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, ServerPackageManager manager )
+        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )
         {
             return new LogoutCommand() { Cmd = Cmd, Manager = manager ,Client = Client };
         }

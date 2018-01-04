@@ -6,14 +6,14 @@ using System.Net.Sockets;
 
 namespace BlaBlaServer
 {
-    public class ServerPackageManager
+    public class PackageManager
     {
-        internal ServerSettings Settings;
-        internal ServerCommunication Communication;
+        internal Settings Settings;
+        internal Communication Communication;
         internal CommandParser PackageReceivedParser;
 
 
-        public ServerPackageManager(ServerSettings settings, ServerCommunication communication)
+        public PackageManager(Settings settings, Communication communication)
         {
             Settings = settings;
             Communication = communication;
@@ -21,7 +21,7 @@ namespace BlaBlaServer
             PackageReceivedParser = new CommandParser(GetAvailableCommands());
         }
 
-        private ServerPackageManager() { }
+        private PackageManager() { }
 
         private static IEnumerable<ICommandFactory> GetAvailableCommands()
             => new ICommandFactory[]

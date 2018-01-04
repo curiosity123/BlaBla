@@ -12,8 +12,8 @@ namespace BlaBlaClient
 {
     public class PackageManager
     {
-        public readonly ClientSettings Settings;
-        public readonly ClientCommunication Communication;
+        public readonly Settings Settings;
+        public readonly Communication Communication;
         private readonly CommandParser PackageReceivedParser;
 
 
@@ -26,7 +26,7 @@ namespace BlaBlaClient
 
 
 
-        public PackageManager(ClientSettings data, ClientCommunication communication)
+        public PackageManager(Settings data, Communication communication)
         {
             Communication = communication;
             Communication.PackageReceived += PackageProcessor;

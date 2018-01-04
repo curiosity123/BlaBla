@@ -8,7 +8,7 @@ namespace BlaBlaServer.Commands
     public class LoginCommand : ICommand, ICommandFactory
     {
         public DataPackage Cmd { get; set; }
-        public ServerPackageManager Manager { get; set; }
+        public PackageManager Manager { get; set; }
         public PackageTypeEnum Type { get => PackageTypeEnum.Login; }
         public TcpClient Client { get; set; }
 
@@ -31,7 +31,7 @@ namespace BlaBlaServer.Commands
 
         }
 
-        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, ServerPackageManager manager )
+        ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )
         {
             return new LoginCommand() { Cmd = Cmd, Manager = manager ,Client = Client };
         }

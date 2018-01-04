@@ -21,7 +21,7 @@ namespace BlaBlaWpfClient
             set
             {
                 client = value;
-                Client.PackageManager.LoginReceived = LoginResult;
+                Client.packageManager.LoginReceived = LoginResult;
             }
         }
 
@@ -61,7 +61,7 @@ namespace BlaBlaWpfClient
         private void TryLogin(object obj)
         {
             User user = new User() { NickName = Login, Password = Password };
-            Client.PackageManager.Login(user);
+            Client.packageManager.Login(user);
         }
         private bool CanTryLoginCmd(object obj)
         {

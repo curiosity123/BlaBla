@@ -14,15 +14,15 @@ namespace BlaBlaServer
 {
     public class Server
     {
-        readonly ServerPackageManager PackageManager;
-        readonly ServerSettings AppSettings;
-        readonly ServerCommunication Communication;
+        readonly PackageManager packageManager;
+        readonly Settings settings;
+        readonly Communication communication;
 
         private Server(ISerialization serialization, string ip, int port)
         {
-            AppSettings = new ServerSettings();
-            Communication = new ServerCommunication(serialization, AppSettings, ip, port);
-            PackageManager = new ServerPackageManager(AppSettings, Communication);
+            settings = new Settings();
+            communication = new Communication(serialization, settings, ip, port);
+            packageManager = new PackageManager(settings, communication);
         }
 
         private Server() { }
@@ -37,12 +37,12 @@ namespace BlaBlaServer
 
         public void Start()
         {
-            Communication.Connect();  
+            communication.Start();
         }
 
         public void Stop()
         {
-            Communication.Disconnect();
+            communication.Stop();
         }
 
     }
