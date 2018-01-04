@@ -20,7 +20,7 @@ namespace Common
         private int Port;
         TcpClient tcpClient;
         StreamWriter clientStreamWriter;
-        public event Action<TcpClient,DataPackage> PackageReceived;
+        public event Action<DataPackage> PackageReceived;
 
         ISerialization serializer;
 
@@ -39,7 +39,7 @@ namespace Common
             try
             {
                 tcpClient.Connect(Ip, Port);
-                Receive(PackageReceived);
+                CommunicationTools.Receive(serializer, tcpClient, (x, y) => PackageReceived?.Invoke(y));
             }
             catch
             {
@@ -58,10 +58,6 @@ namespace Common
             tcpClient.Close();
         }
 
-        private void Receive(Action<TcpClient, Common.DataPackage> MessageReceived)
-        {
-            CommunicationTools.Receive(serializer, tcpClient, MessageReceived);
-        }
 
         public void Send<T>(T item)
         {

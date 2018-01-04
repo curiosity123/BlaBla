@@ -52,7 +52,7 @@ namespace BlaBlaConsoleClient
         {
             Console.WriteLine("Enter message");
             string message = Console.ReadLine();
-            Console.WriteLine("Enter consmer nick name");
+            Console.WriteLine("Enter consumer nick name");
             client.PackageManager.Message(message, client.Settings.ActiveUsers);    
         }
 
@@ -99,7 +99,6 @@ namespace BlaBlaConsoleClient
             Console.WriteLine("o -logout");
             Console.WriteLine("m -send message");
             Console.WriteLine("u -get user list");
-            Console.WriteLine("c -get conversation");
             Console.WriteLine("q -exit");
         }
     }

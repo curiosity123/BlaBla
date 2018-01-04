@@ -48,7 +48,7 @@ namespace BlaBlaClient
                     new UnsupportedCommand()
             };
 
-        public void PackageProcessor(TcpClient client, DataPackage cmd)
+        public void PackageProcessor(DataPackage cmd)
             => PackageReceivedParser.ParseCommand(cmd, this)?.Execute();
 
 
