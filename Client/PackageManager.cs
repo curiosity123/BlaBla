@@ -1,12 +1,8 @@
 ﻿using Common;
-using Common.Communication;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net.Sockets;
 using Client;
 using Client.Commands;
-using Common.ICommandPattern;
 
 namespace BlaBlaClient
 {

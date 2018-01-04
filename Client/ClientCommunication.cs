@@ -1,13 +1,8 @@
-﻿using BlaBlaClient;
-using Common.Communication;
-using Common.Serialization;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
+using Common.CommunicationTools;
 
 namespace Common
 {
@@ -38,8 +33,8 @@ namespace Common
             tcpClient = new TcpClient();
             try
             {
-                tcpClient.Connect(Ip, Port);
-                CommunicationTools.Receive(serializer, tcpClient, (x, y) => PackageReceived?.Invoke(y));
+                tcpClient.Connect(Ip, Port);            
+                CommunicationTools.CommunicationTools.Receive(serializer, tcpClient, (x, y) => PackageReceived?.Invoke(y));
             }
             catch
             {
@@ -61,12 +56,12 @@ namespace Common
 
         public void Send<T>(T item)
         {
-            if (CommunicationTools.IsConnected(tcpClient))
-                CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
+            if (CommunicationTools.CommunicationTools.IsConnected(tcpClient))
+                CommunicationTools.CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
             else
             {
                 Connect();
-                CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
+                CommunicationTools.CommunicationTools.Send(serializer, new StreamWriter(tcpClient.GetStream()), item);
             }
         }
 

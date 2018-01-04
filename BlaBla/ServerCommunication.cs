@@ -56,7 +56,7 @@ namespace Common.Communication
                     TcpClient client = Listener.AcceptTcpClient();
                     Settings.Sessions.Add(new Session() { Client = client, LastActivity = DateTime.UtcNow });
                     Console.WriteLine("Connected with new client " + client.Client.RemoteEndPoint.ToString());
-                    CommunicationTools.Receive(Serialization, client, PackageReceived);
+                    CommunicationTools.CommunicationTools.Receive(Serialization, client, PackageReceived);
                 }
                 catch
                 {
@@ -86,8 +86,8 @@ namespace Common.Communication
 
         public void Send<T>(TcpClient Client, T item)
         {
-            if(CommunicationTools.IsConnected(Client))
-                CommunicationTools.Send(Serialization, new StreamWriter(Client.GetStream()), item);
+            if(CommunicationTools.CommunicationTools.IsConnected(Client))
+                CommunicationTools.CommunicationTools.Send(Serialization, new StreamWriter(Client.GetStream()), item);
         }
     }
 

@@ -1,13 +1,4 @@
-﻿using Client;
-using Common;
-using Common.Communication;
-using Common.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+﻿using Common;
 
 namespace BlaBlaClient
 {
