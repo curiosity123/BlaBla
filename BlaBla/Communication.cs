@@ -52,14 +52,18 @@ namespace Common.Communication
             {
                 try
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Listening for new client...");
                     TcpClient client = Listener.AcceptTcpClient();
                     Settings.Sessions.Add(new Session() { Client = client, LastActivity = DateTime.UtcNow });
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Connected with new client " + client.Client.RemoteEndPoint.ToString());
                     CommunicationTools.CommunicationTools.Receive(Serialization, client, PackageReceived);
+                    PrintTotalSessionsCount(Settings.Sessions.Count());
                 }
                 catch
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Server stopped");
                     isRunning = false;
                     break;
@@ -74,7 +78,9 @@ namespace Common.Communication
 
                 foreach (Session cs in session)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Connection terminated... " + cs.Client.Client.RemoteEndPoint.ToString());
+                    PrintTotalSessionsCount(Settings.Sessions.Count()-1);
                     cs.Client.Close();
                 }
 
@@ -82,6 +88,12 @@ namespace Common.Communication
 
                 Thread.Sleep(1000);
             }
+        }
+
+        private void PrintTotalSessionsCount(int count)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Total active sessions: " +count.ToString());
         }
 
         public void Send<T>(TcpClient Client, T item)

@@ -21,12 +21,14 @@ namespace BlaBlaConsoleClient
             client.Run();
 
             ConsoleKeyInfo cmd;
-          
+            Console.ForegroundColor = ConsoleColor.Green;
             while (cmd.KeyChar != 'q')
             {
 
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
                 PrintMenu();
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 cmd = Console.ReadKey();
                 Console.WriteLine();
 
@@ -94,12 +96,12 @@ namespace BlaBlaConsoleClient
         {
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("r -register new user");
-            Console.WriteLine("l -login");
-            Console.WriteLine("o -logout");
-            Console.WriteLine("m -send message");
-            Console.WriteLine("u -get user list");
-            Console.WriteLine("q -exit");
+            Console.WriteLine("r register new user");
+            Console.WriteLine("l login");
+            Console.WriteLine("o logout");
+            Console.WriteLine("m send message");
+            Console.WriteLine("u get user list");
+            Console.WriteLine("q exit");
         }
     }
 
