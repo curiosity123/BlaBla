@@ -18,7 +18,7 @@ namespace Client.Commands
 
         public void Execute()
         {
-            Manager.RegistrationResultReceived?.Invoke(Cmd.Content as User != null);
+            Manager.RegistrationReceived?.Invoke(Cmd.Content as User != null);
             User u = Cmd.Content as User;
 
             if (u != null)

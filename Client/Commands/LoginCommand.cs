@@ -21,7 +21,7 @@ namespace Client.Commands
                 Manager.Settings.CurrentUser = Cmd.Content as User;
                 Manager.Communication.StartSendingAlivePackage(Manager.Settings.CurrentUser);
                 Console.WriteLine("You are logged in");
-                Manager.LogoutPackageReceived?.Invoke();
+                Manager.LoginReceived?.Invoke();
             }
 
         }

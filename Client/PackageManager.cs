@@ -15,9 +15,9 @@ namespace BlaBlaClient
 
         public Action<Message> MessageReceived { get; set; }
         public Action<List<User>> UsersListReceived { get; set; }
-        public Action<bool> RegistrationResultReceived { get; set; }
-        public Action LogoutPackageReceived { get; set; }
-        public Action<bool> LoginReceived { get; set; }
+        public Action RegistrationReceived { get; set; }
+        public Action LogoutReceived { get; set; }
+        public Action LoginReceived { get; set; }
 
 
 

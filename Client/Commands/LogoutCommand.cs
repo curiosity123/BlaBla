@@ -16,7 +16,7 @@ namespace Client.Commands
 
         public void Execute()
         {
-            Manager.LogoutPackageReceived?.Invoke();
+            Manager.LogoutReceived?.Invoke();
             Manager.Communication.StopSendingAlivePackage();
             Manager.Settings.CurrentUser = new User();
             Console.WriteLine("You are logout");
