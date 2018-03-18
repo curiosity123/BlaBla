@@ -27,13 +27,13 @@ namespace BlaBlaClient
             Communication = communication;
             Communication.PackageReceived += PackageProcessor;
             Settings = data;
-            PackageReceivedParser = new CommandParser(GetAvailableCommands());
+            PackageReceivedParser = new CommandParser(RegisteredCommands());
         }
 
         private PackageManager() { }
 
 
-        private static IEnumerable<ICommandFactory> GetAvailableCommands()
+        private static IEnumerable<ICommandFactory> RegisteredCommands()
             => new ICommandFactory[]
             {
                     new LoginCommand(),

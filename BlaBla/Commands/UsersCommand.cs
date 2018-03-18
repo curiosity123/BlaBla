@@ -19,9 +19,14 @@ namespace BlaBlaServer.Commands
 
         public void Execute()
         {
-            DataPackage usersCmd = new DataPackage() { Type = PackageTypeEnum.Users, Content = Manager.Settings.Users };
-            Manager.Communication.Send(Client, usersCmd);
+            DataPackage usersCmd;
 
+            if (Manager.Settings.Users.Count > 0)
+                usersCmd = new DataPackage() { Type = PackageTypeEnum.Users, Content = Manager.Settings.Users };
+            else
+                usersCmd = new DataPackage() { Type = PackageTypeEnum.Users, Content = null };
+
+            Manager.Communication.Send(Client, usersCmd);
         }
 
         ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )

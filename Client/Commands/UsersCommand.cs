@@ -17,11 +17,11 @@ namespace Client.Commands
 
         public void Execute()
         {
-            if (Cmd.Content is User)
+            if (Cmd.Content is List<User>)
             {
                 Manager.Settings.ActiveUsers = Cmd.Content as List<User>;
                 Manager.UsersListReceived?.Invoke(Cmd.Content as List<User>);
-                Console.WriteLine("Get users");
+                Console.WriteLine("Users received successfully ");
             }
         }
 

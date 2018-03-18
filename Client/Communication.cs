@@ -18,6 +18,7 @@ namespace Common
         public event Action<DataPackage> PackageReceived;
 
         ISerialization serializer;
+        private bool IsAlive = false;
 
         public Communication(ISerialization serializer, string ip, int port)
         {
@@ -44,7 +45,7 @@ namespace Common
             clientStreamWriter = new StreamWriter(tcpClient.GetStream());
         }
 
-        private bool IsAlive = false;
+ 
 
         public void Disconnect()
         {
