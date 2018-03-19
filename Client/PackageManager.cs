@@ -73,7 +73,7 @@ namespace BlaBlaClient
 
         public void Logout()
         {
-            if (Settings.CurrentUser == null)
+            if (Settings.CurrentUser != null)
             {
                 DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
                 Communication.Send(cmd);
@@ -91,9 +91,14 @@ namespace BlaBlaClient
 
         public void Message(string text, List<User> users)
         {
-            Message msg = new Common.Message() { Sender = Settings.CurrentUser, UserList = users, Text = text };
-            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Message, Content = msg };
-            Communication.Send(cmd);
+            if (Settings.CurrentUser != null)
+            {
+                Message msg = new Common.Message() { Sender = Settings.CurrentUser, UserList = users, Text = text };
+                DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Message, Content = msg };
+                Communication.Send(cmd);
+            }
+            else
+                Console.WriteLine("Sorry, You are not logged...");
         }
     }
 }

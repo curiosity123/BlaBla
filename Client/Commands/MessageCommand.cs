@@ -17,7 +17,7 @@ namespace Client.Commands
 
         public void Execute()
         {
-            if (Cmd.Content is Message)
+            if (Manager.Settings.CurrentUser!=null && Cmd.Content is Message)
             {
                 Message msg = Cmd.Content as Message;
                 Console.WriteLine("User:"+msg.Sender.NickName + "# Wrote: " + msg.Text);

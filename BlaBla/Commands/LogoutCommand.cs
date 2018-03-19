@@ -15,11 +15,12 @@ namespace BlaBlaServer.Commands
 
         public void Execute()
         {
-            var session = (from x in Manager.Settings.Sessions where x.User!=null && x.User.Id == (Cmd.Content as User).Id && !x.IsDead select x).First() ;
+            var session = (from x in Manager.Settings.Sessions where x.User!=null && x.User.Id == (Cmd.Content as User).Id select x).FirstOrDefault() ;
             if (session != null)
             {
-                Client.Close();
+
                 Manager.Communication.Send(Client, new DataPackage() { Type = PackageTypeEnum.Logout, Content = null });
+                Client.Close();
             }
         }
 

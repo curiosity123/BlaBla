@@ -48,6 +48,7 @@ namespace BlaBlaConsoleClient
                     Users();
 
             }
+            Console.WriteLine("Bye bye!");
         }
 
         private static void NewMessage()
