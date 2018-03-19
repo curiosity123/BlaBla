@@ -17,9 +17,12 @@ namespace Client.Commands
 
         public void Execute()
         {
-            Message msg = Cmd.Content as Message;
-            Console.WriteLine(msg.Sender.NickName + "# Wrote: " + msg.Text);
-            Manager.MessageReceived?.Invoke(msg);
+            if (Cmd.Content is Message)
+            {
+                Message msg = Cmd.Content as Message;
+                Console.WriteLine("User:"+msg.Sender.NickName + "# Wrote: " + msg.Text);
+                Manager.MessageReceived?.Invoke(msg);
+            }
         }
 
         ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)

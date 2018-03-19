@@ -15,8 +15,12 @@ namespace BlaBlaServer.Commands
 
         public void Execute()
         {
-            var session = (from x in Manager.Settings.Sessions where x.User.Id == (Cmd.Content as User).Id select x);
-            Manager.Communication.Send(Client, new DataPackage() { Type = PackageTypeEnum.Logout, Content = null });
+            var session = (from x in Manager.Settings.Sessions where x.User!=null && x.User.Id == (Cmd.Content as User).Id && !x.IsDead select x).First() ;
+            if (session != null)
+            {
+                Client.Close();
+                Manager.Communication.Send(Client, new DataPackage() { Type = PackageTypeEnum.Logout, Content = null });
+            }
         }
 
         ICommand ICommandFactory.MakeCommand(TcpClient Client, DataPackage Cmd, PackageManager manager )

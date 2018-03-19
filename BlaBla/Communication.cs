@@ -74,7 +74,7 @@ namespace Common.Communication
         {
             while (isRunning)
             {
-                var session = from x in Settings.Sessions where x.LastActivity.AddSeconds(10) < DateTime.UtcNow select x;
+                var session = from x in Settings.Sessions where x.IsDead select x;
 
                 foreach (Session cs in session)
                 {

@@ -18,13 +18,14 @@ namespace Client.Commands
 
         public void Execute()
         {
-            Manager.RegistrationReceived?.Invoke(Cmd.Content as User != null);
+           
             User u = Cmd.Content as User;
 
             if (u != null)
                 Console.WriteLine("User " + u.NickName + " was registered succesfully! :)");
             else
-                Console.WriteLine("User " + u.NickName + " was not registered, Try different nickname... :(");
+                Console.WriteLine("User was not registered, Try different nickname... :(");
+            Manager.RegistrationReceived?.Invoke();
         }
 
         ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)

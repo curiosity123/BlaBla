@@ -8,6 +8,6 @@ namespace BlaBlaClient
     public class Settings
     {
         public List<User> ActiveUsers = new List<User>();
-        public User CurrentUser = new User();
+        public User CurrentUser = null;
     }
 }

@@ -19,9 +19,9 @@ namespace Client.Commands
         {
             if (Cmd.Content is List<User>)
             {
-                Manager.Settings.ActiveUsers = Cmd.Content as List<User>;
-                Manager.UsersListReceived?.Invoke(Cmd.Content as List<User>);
+                Manager.Settings.ActiveUsers = Cmd.Content as List<User>;              
                 Console.WriteLine("Users received successfully ");
+                Manager.UsersListReceived?.Invoke(Cmd.Content as List<User>);
             }
         }
 

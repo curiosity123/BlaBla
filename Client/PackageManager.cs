@@ -51,20 +51,36 @@ namespace BlaBlaClient
 
         public void RegisterNewUser(User user)
         {
-            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Register, Content = user };
-            Communication.Send(cmd);
+            if (Settings.CurrentUser == null)
+            {
+                DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Register, Content = user };
+                Communication.Send(cmd);
+            }
+            else
+                Console.WriteLine("Sorry, please log out before add new user");
         }
 
         public void Login(User user)
         {
-            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Login, Content = user };
-            Communication.Send(cmd);
+            if (Settings.CurrentUser == null)
+            {
+                DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Login, Content = user };
+                Communication.Send(cmd);
+            }
+            else
+                Console.WriteLine("Sorry, You are already logged... as a:", Settings.CurrentUser.NickName);
         }
 
         public void Logout()
         {
-            DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
-            Communication.Send(cmd);
+            if (Settings.CurrentUser == null)
+            {
+                DataPackage cmd = new DataPackage() { Type = PackageTypeEnum.Logout, Content = Settings.CurrentUser };
+                Communication.Send(cmd);
+            }
+            else
+                Console.WriteLine("Sorry, You are not logged...");
+
         }
 
         public void GetUsers()

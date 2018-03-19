@@ -16,10 +16,10 @@ namespace Client.Commands
 
         public void Execute()
         {
-            Manager.LogoutReceived?.Invoke();
             Manager.Communication.StopSendingAlivePackage();
-            Manager.Settings.CurrentUser = new User();
+            Manager.Settings.CurrentUser = null;
             Console.WriteLine("You are logout");
+            Manager.LogoutReceived?.Invoke();
         }
 
         ICommand ICommandFactory.MakeCommand(DataPackage Cmd, PackageManager manager)
